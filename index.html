@@ -3,1112 +3,423 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AMK Travels India — ERP / Automation Suite (Prototype)</title>
+<title>AMK Travels India — ERP (Live App)</title>
 <style>
-:root{
-  --brand:#6d1a2d; --brand2:#9b2742; --gold:#c8a24b; --gold2:#e3c578;
-  --bg:#f5f1ea; --ink:#211d24; --muted:#6f6a74; --line:#e7e0d6;
-  --card:#ffffff; --ok:#1f9d63; --okbg:#e7f6ee; --warn:#d9852a; --warnbg:#fbefdd;
-  --danger:#c0392b; --dangerbg:#fbe7e4; --info:#2f6fb0; --infobg:#e6f0fa;
-  --shadow:0 1px 2px rgba(20,10,10,.06),0 6px 20px rgba(20,10,10,.06);
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.45}
-a{color:inherit;text-decoration:none}
-.app{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
-/* SIDEBAR */
-.side{background:linear-gradient(180deg,#5c1525 0%,#6d1a2d 55%,#7d2236 100%);color:#f3e9df;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
-.brand{display:flex;align-items:center;gap:10px;padding:18px 18px 14px}
-.logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));display:grid;place-items:center;color:#5c1525;font-weight:800;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.brand b{font-size:15px;letter-spacing:.3px;display:block;line-height:1.1}
-.brand small{color:#e8c98f;font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase}
-.nav{padding:6px 10px;overflow:auto;flex:1}
-.nav .grp{color:#e3b07e;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;margin:14px 12px 6px;opacity:.8}
-.nav a{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;color:#f0e2d6;font-weight:500;cursor:pointer;border-left:3px solid transparent;margin:1px 0}
-.nav a svg{width:17px;height:17px;opacity:.9;flex:none}
-.nav a:hover{background:rgba(255,255,255,.07)}
-.nav a.active{background:rgba(255,255,255,.12);border-left-color:var(--gold);color:#fff}
-.nav a .badge{margin-left:auto;background:var(--gold);color:#5c1525;font-size:10px;font-weight:800;padding:1px 7px;border-radius:20px}
-.side .foot{padding:12px 16px;border-top:1px solid rgba(255,255,255,.12);font-size:11px;color:#e9cfa6}
-/* TOPBAR */
-.main{display:flex;flex-direction:column;min-width:0}
-.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:11px 22px}
-.top h1{font-size:16px;margin:0;font-weight:700}
-.crumb{color:var(--muted);font-size:12px}
-.search{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:7px 11px;color:var(--muted);min-width:230px}
-.search input{border:0;background:transparent;outline:0;width:100%;font-size:13px;color:var(--ink)}
-.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#fff;border-radius:30px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
-.pill .dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
-.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--brand2),var(--brand));color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
-/* CONTENT */
-.content{padding:22px;max-width:1180px;width:100%}
-.screen{display:none;animation:f .25s ease}
-.screen.active{display:block}
-@keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.row{display:flex;gap:16px;flex-wrap:wrap}
-.grid{display:grid;gap:16px}
-.g4{grid-template-columns:repeat(4,1fr)}
-.g3{grid-template-columns:repeat(3,1fr)}
-.g2{grid-template-columns:repeat(2,1fr)}
-@media(max-width:980px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2{grid-template-columns:1fr}.app{grid-template-columns:1fr}.side{display:none}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px}
-.card h3{margin:0 0 2px;font-size:13.5px}
-.card .sub{color:var(--muted);font-size:12px;margin-bottom:12px}
-.kpi .lab{color:var(--muted);font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px}
-.kpi .val{font-size:26px;font-weight:800;margin:8px 0 2px;letter-spacing:-.5px}
-.kpi .delta{font-size:11.5px;font-weight:700}
-.up{color:var(--ok)} .down{color:var(--danger)}
-.ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none}
-.ic svg{width:16px;height:16px}
-.b-brand{background:#f6e7ea;color:var(--brand)} .b-gold{background:#f8efd9;color:#a9802a}
-.b-ok{background:var(--okbg);color:var(--ok)} .b-info{background:var(--infobg);color:var(--info)}
-.b-warn{background:var(--warnbg);color:var(--warn)}
-.sectitle{display:flex;align-items:center;gap:10px;margin:24px 2px 12px}
-.sectitle h2{font-size:15px;margin:0}
-.sectitle .line{flex:1;height:1px;background:var(--line)}
-.btn{display:inline-flex;align-items:center;gap:7px;border:0;border-radius:9px;padding:8px 13px;font-weight:700;font-size:12.5px;cursor:pointer;background:var(--brand);color:#fff}
-.btn svg{width:15px;height:15px}
-.btn.gold{background:linear-gradient(135deg,#caa24c,#b88a2f);color:#3a2407}
-.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
-.btn.sm{padding:5px 10px;font-size:11.5px;border-radius:8px}
-table{width:100%;border-collapse:collapse;font-size:12.7px}
-th{text-align:left;color:var(--muted);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.4px;padding:9px 10px;border-bottom:1px solid var(--line)}
-td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
-tr:last-child td{border-bottom:0}
-tbody tr:hover{background:#fbf8f3}
-.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:30px}
-.t-ok{background:var(--okbg);color:var(--ok)} .t-warn{background:var(--warnbg);color:var(--warn)}
-.t-info{background:var(--infobg);color:var(--info)} .t-danger{background:var(--dangerbg);color:var(--danger)}
-.t-mut{background:#eee9e1;color:#7a7468}
-.av{width:26px;height:26px;border-radius:50%;display:inline-grid;place-items:center;color:#fff;font-size:10.5px;font-weight:700;margin-right:6px}
-.bar{height:8px;border-radius:6px;background:#eee5d8;overflow:hidden}
-.bar > i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--brand2),var(--gold))}
-.kanban{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-.col{background:#f3eee6;border:1px solid var(--line);border-radius:12px;padding:10px;min-height:120px}
-.col h4{margin:2px 4px 10px;font-size:12px;display:flex;justify-content:space-between;color:#5b5560}
-.lead{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:9px;box-shadow:var(--shadow);cursor:grab}
-.lead b{font-size:12.5px} .lead .m{color:var(--muted);font-size:11px;margin-top:3px}
-.lead .v{font-weight:800;color:var(--brand);font-size:12.5px;margin-top:6px}
-.matrix-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
-.matrix{min-width:920px}
-.matrix th{position:sticky;top:0;background:#faf6ef}
-.flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.chip{background:#f3eee6;border:1px solid var(--line);border-radius:8px;padding:3px 8px;font-size:11px;font-weight:600}
-.phone{width:300px;background:#0e0e12;border-radius:34px;padding:11px;box-shadow:0 16px 50px rgba(0,0,0,.28)}
-.phone .scr{background:#f5f1ea;border-radius:24px;overflow:hidden;height:560px;display:flex;flex-direction:column}
-.phh{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#fff;padding:16px 16px 14px}
-.phh small{color:#f0cf9c;letter-spacing:1px;font-size:9px;text-transform:uppercase}
-.phbody{padding:14px;overflow:auto;flex:1}
-.live{display:flex;gap:10px;margin-bottom:14px}
-.live .ti{display:flex;flex-direction:column;align-items:center}
-.live .ti i{width:13px;height:13px;border-radius:50%;background:var(--gold);display:block;border:3px solid #fff;box-shadow:0 0 0 1px var(--gold)}
-.live .ti span{flex:1;width:2px;background:#dcd3c6}
-.live.done .ti i{background:var(--ok);box-shadow:0 0 0 1px var(--ok)}
-.live .tx b{font-size:12.5px} .live .tx p{margin:2px 0 0;color:var(--muted);font-size:11px}
-.wa{background:#e6ddd0;border-radius:14px;padding:12px;font-size:12px}
-.wabar{background:#075e54;color:#fff;border-radius:10px 10px 0 0;padding:9px 12px;display:flex;align-items:center;gap:9px;font-weight:600;font-size:12.5px}
-.bub{background:#fff;border-radius:9px;padding:9px 11px;margin:9px 10px;font-size:12px;box-shadow:0 1px 1px rgba(0,0,0,.06);position:relative}
-.bub.me{background:#dcf8c6;margin-left:40px}
-.bub .meta{color:#8a8f98;font-size:9.5px;margin-top:5px;text-align:right}
-.bub .who{color:var(--brand);font-weight:700;font-size:10.5px;margin-bottom:3px}
-.inv{border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.inv .hd{background:var(--brand);color:#fff;padding:16px 18px;display:flex;justify-content:space-between;align-items:flex-start}
-.inv .hd small{color:#f0cf9c}
-.inv .bd{padding:18px}
-.tot{display:flex;justify-content:flex-end}
-.tot table{width:300px}
-.tot td{padding:6px 4px;border:0}
-.note{background:var(--infobg);border:1px solid #cfe0f1;color:#23527c;border-radius:10px;padding:11px 13px;font-size:12px}
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted)}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.3);font-size:13px;font-weight:600;opacity:0;transition:.3s;z-index:99;display:flex;align-items:center;gap:9px}
+:root{--brand:#6d1a2d;--brand2:#9b2742;--gold:#c8a24b;--bg:#f5f1ea;--ink:#211d24;--muted:#6f6a74;--line:#e3dccf;--card:#fff;--ok:#1f9d63;--okbg:#e7f6ee;--warn:#d9852a;--warnbg:#fbefdd;--danger:#c0392b;--dangerbg:#fbe7e4;--info:#2f6fb0;--infobg:#e6f0fa}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.45}
+button{font-family:inherit}
+#login{position:fixed;inset:0;background:linear-gradient(135deg,#5c1525,#7d2236);display:flex;align-items:center;justify-content:center;z-index:50}
+#login .box{background:#fff;border-radius:18px;padding:30px;width:350px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+#login .logo{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,var(--gold),#e3c578);display:grid;place-items:center;color:#5c1525;font-weight:800;font-size:20px;margin:0 auto 14px}
+#login h1{font-size:18px;text-align:center;margin:0 0 4px}#login p{text-align:center;color:var(--muted);font-size:12.5px;margin:0 0 18px}
+.inp{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:10px;outline:none}
+.inp:focus{border-color:var(--gold)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:10px;padding:10px 14px;font-weight:700;font-size:13px;cursor:pointer;background:var(--brand);color:#fff}
+.btn:hover{background:var(--brand2)}.btn.gold{background:linear-gradient(135deg,#caa24c,#b88a2f);color:#3a2407}
+.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}.btn.sm{padding:6px 10px;font-size:12px;border-radius:8px}
+.btn.danger{background:var(--danger)}.btn.full{width:100%}.btn.wa{background:#25d366;color:#06351f}
+#app{display:none;grid-template-columns:222px 1fr;min-height:100vh}
+.side{background:linear-gradient(180deg,#5c1525,#6d1a2d 60%,#7d2236);color:#f3e9df;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;padding:16px 16px 12px}
+.brand .lg{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#e3c578);display:grid;place-items:center;color:#5c1525;font-weight:800}
+.brand b{font-size:14px;display:block;line-height:1}.brand small{color:#e8c98f;font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase}
+.nav{padding:6px 8px;overflow:auto;flex:1}
+.nav a{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;color:#f0e2d6;font-weight:600;cursor:pointer;border-left:3px solid transparent;font-size:13px;margin:1px 0}
+.nav a:hover{background:rgba(255,255,255,.08)}.nav a.active{background:rgba(255,255,255,.13);border-left-color:var(--gold);color:#fff}
+.nav .ico{width:18px;text-align:center}
+.side .who{padding:10px 14px;border-top:1px solid rgba(255,255,255,.12);font-size:11px;color:#e9cfa6}
+.main{min-width:0;display:flex;flex-direction:column}
+.top{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:11px 20px}
+.top h2{margin:0;font-size:16px}.top .sp{flex:1}
+.wrap{padding:20px;max-width:1150px;width:100%}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:0 1px 2px rgba(20,10,10,.05),0 8px 22px rgba(20,10,10,.05)}
+.kpi .l{color:var(--muted);font-size:12px;font-weight:600}.kpi .v{font-size:24px;font-weight:800;margin-top:6px;letter-spacing:-.5px}
+h3.sec{font-size:14px;margin:22px 2px 10px}
+table{width:100%;border-collapse:collapse;font-size:12.8px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th{text-align:left;color:var(--muted);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;padding:9px 10px;border-bottom:1px solid var(--line);background:#faf6ef}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}tbody tr:hover{background:#fbf8f3}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:30px}
+.t-ok{background:var(--okbg);color:var(--ok)}.t-warn{background:var(--warnbg);color:var(--warn)}.t-info{background:var(--infobg);color:var(--info)}.t-mut{background:#eee9e1;color:#7a7468}.t-danger{background:var(--dangerbg);color:var(--danger)}
+.rowflex{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.muted{color:var(--muted)}.right{text-align:right}.up{color:var(--ok)}.down{color:var(--danger)}
+.linkbtn{color:var(--brand);font-weight:700;cursor:pointer;background:none;border:0;font-size:12px}
+.modal{position:fixed;inset:0;background:rgba(20,10,12,.45);display:none;align-items:flex-start;justify-content:center;z-index:40;padding:30px 14px;overflow:auto}
+.modal.open{display:flex}
+.sheet{background:#fff;border-radius:16px;width:600px;max-width:96vw;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
+.sheet h3{margin:0 0 14px;font-size:16px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.f{display:flex;flex-direction:column;gap:4px}.f.wide{grid-column:1/-1}
+.f label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+.f input,.f select,.f textarea{border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:13px;outline:none;font-family:inherit}
+.f input:focus,.f select:focus{border-color:var(--gold)}
+.modal .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;flex-wrap:wrap}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:12px;font-weight:600;font-size:13px;opacity:0;transition:.3s;z-index:60}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast svg{width:18px;height:18px;color:var(--gold2)}
-.banner{background:linear-gradient(110deg,#6d1a2d,#9b2742);color:#fff;border-radius:14px;padding:16px 18px;display:flex;align-items:center;gap:16px;margin-bottom:18px}
-.banner .ph{width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.15);display:grid;place-items:center}
-.banner svg{width:22px;height:22px;color:var(--gold2)}
-.banner b{font-size:14px} .banner p{margin:3px 0 0;color:#f3dcc4;font-size:12px}
-.miniflow{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin-top:4px}
-.miniflow .step{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-size:11.5px;font-weight:600;display:flex;align-items:center;gap:7px;box-shadow:var(--shadow)}
-.miniflow .step .n{width:18px;height:18px;border-radius:50%;background:var(--brand);color:#fff;font-size:10px;display:grid;place-items:center;font-weight:800}
-.miniflow .ar{color:var(--gold);font-weight:800;padding:0 6px}
-.tabbar{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:14px}
-.tabbar a{padding:8px 13px;font-size:12.5px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer}
-.tabbar a.on{color:var(--brand);border-bottom-color:var(--brand)}
-.spark{display:flex;align-items:flex-end;gap:5px;height:60px}
-.spark i{flex:1;background:linear-gradient(180deg,var(--gold),var(--brand2));border-radius:4px 4px 0 0;opacity:.9}
-.donut{width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--brand) 0 46%,var(--gold) 46% 74%,var(--info) 74% 90%,#d9cfbf 90% 100%);display:grid;place-items:center}
-.donut .hole{width:74px;height:74px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;font-weight:800;font-size:13px;line-height:1.1}
-.small{font-size:11.5px;color:var(--muted)}
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px}
-.fgrid.t3{grid-template-columns:1fr 1fr 1fr}
-.fld{border:1px solid var(--line);background:#fcfaf6;border-radius:8px;padding:7px 10px}
-.fld .flbl{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.3px}
-.fld .fval{font-size:12.5px;color:var(--ink);margin-top:2px}
-.fld.wide{grid-column:1/-1}
-.fld.edit{border-color:var(--gold);background:#fffdf5}
-@media(max-width:700px){.fgrid,.fgrid.t3{grid-template-columns:1fr}}
+.empty{padding:26px;text-align:center;color:var(--muted);font-size:13px;background:#fff;border:1px dashed var(--line);border-radius:12px}
+.itemrow{display:grid;grid-template-columns:1.4fr .7fr 1.4fr 1.4fr 1.4fr auto;gap:8px;margin-bottom:8px}
+.itemrow input{border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:12.5px}
+#print{display:none}
+@media print{body *{visibility:hidden}#print,#print *{visibility:visible}#print{display:block;position:absolute;inset:0;padding:0}}
+.doc{max-width:760px;margin:0 auto;color:#000;font-size:13px}
+.doc .hd{display:flex;justify-content:space-between;border-bottom:3px solid var(--brand);padding-bottom:12px;margin-bottom:14px}
+.doc h1{color:var(--brand);font-size:22px;margin:0}
+.doc table{border:1px solid #999}.doc th{background:#f0e7ea;color:#000;border-bottom:1px solid #999}.doc td{border-bottom:1px solid #ccc}
+.doc .tot{margin-left:auto;width:300px;margin-top:10px}.doc .tot div{display:flex;justify-content:space-between;padding:4px 0}
+@media(max-width:760px){#app{grid-template-columns:1fr}.side{display:none}.fg{grid-template-columns:1fr}.itemrow{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<div class="app">
-  <!-- SIDEBAR -->
-  <aside class="side">
-    <div class="brand">
-      <div class="logo">AMK</div>
-      <div><b>AMK Travels</b><small>India · ERP</small></div>
-    </div>
-    <nav class="nav" id="nav">
-      <div class="grp">Operations</div>
-      <a data-s="dash" class="active">${ic('grid')}<span>Dashboard</span></a>
-      <a data-s="crm">${ic('users')}<span>CRM / Leads</span><span class="badge">7</span></a>
-      <a data-s="prop">${ic('doc')}<span>Proposals</span></a>
-      <a data-s="book">${ic('cal')}<span>Bookings</span><span class="badge">4</span></a>
-      <a data-s="form">${ic('slip')}<span>Booking Form / Contract</span></a>
-      <a data-s="fleet">${ic('car')}<span>Vendors & Fleet</span></a>
-      <a data-s="vwo">${ic('slip')}<span>Vendor Work Order</span></a>
-      <a data-s="matrix">${ic('matrix')}<span>Allocation Matrix</span></a>
-      <a data-s="dispatch">${ic('wa')}<span>WhatsApp Dispatch</span></a>
-      <div class="grp">Finance</div>
-      <a data-s="duty">${ic('slip')}<span>Duty Slips & Expenses</span></a>
-      <a data-s="bill">${ic('rupee')}<span>Billing & GST</span></a>
-      <a data-s="cash">${ic('flow')}<span>Cash Flow</span></a>
-      <a data-s="reports">${ic('chart')}<span>Reports</span></a>
-      <div class="grp">Guest</div>
-      <a data-s="guest">${ic('phone')}<span>Guest Live View</span></a>
-      <a data-s="settings">${ic('gear')}<span>Settings & Users</span></a>
-    </nav>
-    <div class="foot">Jaipur · Udaipur · Jodhpur · Ranthambore</div>
-  </aside>
 
-  <!-- MAIN -->
-  <div class="main">
-    <header class="top">
-      <div>
-        <h1 id="ttl">Command Dashboard</h1>
-        <div class="crumb" id="crumb">Home / Live overview · Monday, 29 Jun 2026</div>
-      </div>
-      <div class="search">${ic('search')}<input placeholder="Search weddings, guests, cars, invoices…"/></div>
-      <div class="pill"><span class="dot"></span>Jaipur ▾</div>
-      <div class="avatar" title="Logged in via mobile +91 98290 •••••">AK</div>
-    </header>
-
-    <div class="content">
-
-      <!-- ================= DASHBOARD ================= -->
-      <section class="screen active" data-screen="dash">
-        <div class="banner">
-          <div class="ph">${ic('bolt')}</div>
-          <div style="flex:1">
-            <b>Peak wedding season — 4 live groups, 63 cars deployed today across 4 cities</b>
-            <p>Everything below updates live. Each wedding runs on autopilot: lead → proposal → allocation → WhatsApp dispatch → auto GST bill.</p>
-          </div>
-          <button class="btn gold" onclick="go('matrix')">${ic('matrix')} Open Allocation</button>
-        </div>
-
-        <div class="grid g4">
-          <div class="card kpi"><div class="lab"><span class="ic b-brand">${ic('cal')}</span>Active Weddings</div><div class="val">4</div><div class="delta up">▲ 2 vs last week</div></div>
-          <div class="card kpi"><div class="lab"><span class="ic b-gold">${ic('car')}</span>Cars Deployed Today</div><div class="val">63</div><div class="delta up">41 vendor · 22 in-house</div></div>
-          <div class="card kpi"><div class="lab"><span class="ic b-ok">${ic('rupee')}</span>Cash In — Today</div><div class="val">₹4.82L</div><div class="delta up">▲ 18% vs yest.</div></div>
-          <div class="card kpi"><div class="lab"><span class="ic b-warn">${ic('flow')}</span>Cash Out — Today</div><div class="val">₹1.96L</div><div class="delta down">Driver + fuel + toll</div></div>
-        </div>
-
-        <div class="grid g3" style="margin-top:16px">
-          <div class="card" style="grid-column:span 2">
-            <h3>Today's Movements — Arrival & Travel Matrix</h3>
-            <div class="sub">Auto-pulled from confirmed bookings · drivers & guests already notified on WhatsApp</div>
-            <table>
-              <thead><tr><th>Guest</th><th>Pick-up</th><th>Drop</th><th>Car</th><th>Driver</th><th>Status</th></tr></thead>
-              <tbody>
-                <tr><td><span class="av" style="background:#9b2742">RA</span>Rohan Agarwal +12</td><td>JAI T2 · 14:20 (AI 611)</td><td>Rambagh Palace</td><td>Vellfire · RJ14 CX 8821</td><td>Mahesh</td><td><span class="tag t-info">En route</span></td></tr>
-                <tr><td><span class="av" style="background:#2f6fb0">PM</span>Priya Mittal</td><td>Rambagh Palace</td><td>Amber Fort (sangeet)</td><td>Merc E · RJ14 CB 4410</td><td>Suresh</td><td><span class="tag t-ok">Completed</span></td></tr>
-                <tr><td><span class="av" style="background:#1f9d63">SF</span>Sharma Family · 45 pax</td><td>Udaipur Airport</td><td>Leela Palace</td><td>Volvo 45 · RJ27 V 1209</td><td>Iqbal</td><td><span class="tag t-warn">Boarding</span></td></tr>
-                <tr><td><span class="av" style="background:#d9852a">GK</span>Gaurav Khanna</td><td>Jodhpur AP · 16:05</td><td>Umaid Bhawan</td><td>S-Class · RJ19 SC 7</td><td>Devendra</td><td><span class="tag t-mut">Assigned</span></td></tr>
-                <tr><td><span class="av" style="background:#6d1a2d">VN</span>Verma · 02 cars</td><td>Ranthambore Stn</td><td>Aman-i-Khás</td><td>2× Innova Crysta</td><td>Pool</td><td><span class="tag t-mut">Scheduled</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="card">
-            <h3>Live Alerts</h3>
-            <div class="sub">Auto-flagged by the system</div>
-            <div class="note" style="margin-bottom:10px">${ic('bolt')} <b>3 vendor cars</b> unconfirmed for Sharma–Bansal 02 Jul. <a style="color:var(--brand);font-weight:700">Auto-chase →</a></div>
-            <div class="note" style="background:var(--warnbg);border-color:#ecd6b3;color:#8a5a16;margin-bottom:10px">⏱ Driver <b>Iqbal</b> duty slip pending photo upload.</div>
-            <div class="note" style="background:var(--okbg);border-color:#bfe6cf;color:#176844">✓ Invoice <b>#AMK-2611</b> (Agarwal) ready to send — ₹6.4L.</div>
-            <div style="margin-top:14px" class="legend">
-              <span><i style="background:var(--brand)"></i>In-house fleet</span>
-              <span><i style="background:var(--gold)"></i>Vendor cars</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid g3" style="margin-top:16px">
-          <div class="card"><h3>This Month — Revenue</h3><div class="sub">₹ Lakh · by week</div>
-            <div class="spark"><i style="height:40%"></i><i style="height:58%"></i><i style="height:50%"></i><i style="height:72%"></i><i style="height:88%"></i><i style="height:64%"></i></div>
-            <div style="display:flex;justify-content:space-between;margin-top:8px" class="small"><span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span></div>
-          </div>
-          <div class="card"><h3>Cars by Type — Today</h3><div class="sub">Deployment split</div>
-            <div style="display:flex;gap:14px;align-items:center">
-              <div class="donut"><div class="hole">63<br><span class="small">cars</span></div></div>
-              <div style="font-size:12px;line-height:1.9">
-                <div><i class="legend" style="background:var(--brand);width:10px;height:10px;display:inline-block;border-radius:3px;margin-right:6px"></i>Innova/Sedan · 46%</div>
-                <div><i style="background:var(--gold);width:10px;height:10px;display:inline-block;border-radius:3px;margin-right:6px"></i>Luxury (E/S/Vellfire) · 28%</div>
-                <div><i style="background:var(--info);width:10px;height:10px;display:inline-block;border-radius:3px;margin-right:6px"></i>Urbania/Tempo · 16%</div>
-                <div><i style="background:#d9cfbf;width:10px;height:10px;display:inline-block;border-radius:3px;margin-right:6px"></i>Volvo Bus · 10%</div>
-              </div>
-            </div>
-          </div>
-          <div class="card"><h3>Automation Engine</h3><div class="sub">Runs in the last 24h</div>
-            <div style="font-size:12.5px;line-height:2">
-              <div style="display:flex;justify-content:space-between"><span>WhatsApp alerts sent</span><b>318</b></div>
-              <div style="display:flex;justify-content:space-between"><span>Guest pick-up cards</span><b>94</b></div>
-              <div style="display:flex;justify-content:space-between"><span>Driver assignments</span><b>63</b></div>
-              <div style="display:flex;justify-content:space-between"><span>Duty slips digitised</span><b>38</b></div>
-              <div style="display:flex;justify-content:space-between"><span>GST invoices generated</span><b>5</b></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= CRM ================= -->
-      <section class="screen" data-screen="crm">
-        <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:6px">
-          <div class="small">Pipeline value: <b style="color:var(--brand);font-size:14px">₹2.34 Cr</b> across 7 active enquiries</div>
-          <button class="btn">${ic('plus')} New Lead</button>
-        </div>
-        <div class="kanban">
-          <div class="col"><h4>New Enquiry <span>2</span></h4>
-            <div class="lead"><b>Bhandari Wedding</b><div class="m">Jaipur · 12–15 Aug · ~280 pax</div><div class="v">≈ ₹14L</div></div>
-            <div class="lead"><b>Corp — Dell Offsite</b><div class="m">Udaipur · 09 Jul · 6 Innova</div><div class="v">≈ ₹2.1L</div></div>
-          </div>
-          <div class="col"><h4>Proposal Sent <span>2</span></h4>
-            <div class="lead"><b>Kapoor–Sethi</b><div class="m">Jodhpur · 20 Aug · Fleet mix</div><div class="v">≈ ₹22L</div><div style="margin-top:6px"><span class="tag t-info">v2 sent</span></div></div>
-            <div class="lead"><b>Iyer Anniversary</b><div class="m">Ranthambore · 18 Jul</div><div class="v">≈ ₹3.6L</div></div>
-          </div>
-          <div class="col"><h4>Negotiation <span>1</span></h4>
-            <div class="lead"><b>Kapoor–Sethi ↑</b><div class="m">Wants 3 S-Class + Volvo w/ washroom</div><div class="v">≈ ₹24L</div><div style="margin-top:6px"><span class="tag t-warn">Revise rate</span></div></div>
-          </div>
-          <div class="col"><h4>Won ✓ <span>2</span></h4>
-            <div class="lead"><b>Agarwal–Mittal</b><div class="m">Rambagh · live now</div><div class="v">₹64L</div></div>
-            <div class="lead"><b>Sharma–Bansal</b><div class="m">Leela Udaipur · 02 Jul</div><div class="v">₹41L</div></div>
-          </div>
-          <div class="col"><h4>Lost <span>1</span></h4>
-            <div class="lead" style="opacity:.6"><b>Mehta Sangeet</b><div class="m">Lost on price · -8%</div><div class="v">₹5L</div></div>
-          </div>
-        </div>
-        <div class="card" style="margin-top:18px">
-          <h3>Lead activity & follow-ups</h3><div class="sub">Auto-reminders fire on WhatsApp + email if a lead goes cold for 48h</div>
-          <table>
-            <thead><tr><th>Lead</th><th>Owner</th><th>City</th><th>Stage</th><th>Next action</th><th>Value</th></tr></thead>
-            <tbody>
-              <tr><td>Kapoor–Sethi</td><td>Neha (Jodhpur)</td><td>Jodhpur</td><td><span class="tag t-warn">Negotiation</span></td><td>Send revised v3 · today 5pm</td><td><b>₹24L</b></td></tr>
-              <tr><td>Bhandari Wedding</td><td>Amit (Jaipur)</td><td>Jaipur</td><td><span class="tag t-info">New</span></td><td>Discovery call · tomorrow</td><td><b>₹14L</b></td></tr>
-              <tr><td>Iyer Anniversary</td><td>Ravi (Ranthambore)</td><td>Ranthambore</td><td><span class="tag t-info">Proposal sent</span></td><td>Follow-up reminder set</td><td><b>₹3.6L</b></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ================= PROPOSALS ================= -->
-      <section class="screen" data-screen="prop">
-        <div class="miniflow">
-          <div class="step"><span class="n">1</span>Build proposal</div><span class="ar">→</span>
-          <div class="step"><span class="n">2</span>Add T&C</div><span class="ar">→</span>
-          <div class="step"><span class="n">3</span>Send & negotiate</div><span class="ar">→</span>
-          <div class="step"><span class="n">4</span>Revise (auto-versioned)</div><span class="ar">→</span>
-          <div class="step"><span class="n">5</span>Won → auto-create booking</div>
-        </div>
-        <div class="grid g3" style="margin-top:16px">
-          <div class="card" style="grid-column:span 2">
-            <div class="row" style="justify-content:space-between;align-items:flex-start">
-              <div><h3>Proposal — Kapoor–Sethi Wedding</h3><div class="sub">Jodhpur · 20–23 Aug 2026 · Umaid Bhawan Palace</div></div>
-              <div style="text-align:right"><span class="tag t-warn">v2 · Negotiation</span><div class="small" style="margin-top:6px">PROP-2026-0188</div></div>
-            </div>
-            <table style="margin-top:8px">
-              <thead><tr><th>Service / Package</th><th>Car type</th><th>Qty × Days</th><th>Rate</th><th>Amount</th></tr></thead>
-              <tbody>
-                <tr><td>Full day — 12hr / 120km (local)</td><td>Innova Crysta</td><td>6 × 4</td><td>₹6,500</td><td>₹1,56,000</td></tr>
-                <tr><td>Full day — 16hr / 160km</td><td>Mercedes E-Class</td><td>2 × 4</td><td>₹18,000</td><td>₹1,44,000</td></tr>
-                <tr><td>VIP — 24hr / 200km</td><td>Mercedes S-Class</td><td>3 × 3</td><td>₹32,000</td><td>₹2,88,000</td></tr>
-                <tr><td>Airport transfer — JDH → Umaid</td><td>Vellfire</td><td>14 trips</td><td>₹7,500</td><td>₹1,05,000</td></tr>
-                <tr><td>Guest shuttle — 24hr</td><td>Volvo 45 (washroom)</td><td>2 × 3</td><td>₹38,000</td><td>₹2,28,000</td></tr>
-                <tr><td>Group transfer — 16hr</td><td>Urbania</td><td>3 × 3</td><td>₹14,000</td><td>₹1,26,000</td></tr>
-              </tbody>
-            </table>
-            <div class="tot" style="margin-top:10px"><table>
-              <tr><td>Subtotal</td><td style="text-align:right">₹10,47,000</td></tr>
-              <tr><td>Negotiated discount (6%)</td><td style="text-align:right">– ₹62,820</td></tr>
-              <tr><td>GST @ 5% (with ITC cap)</td><td style="text-align:right">₹49,209</td></tr>
-              <tr><td><b>Grand total (v2)</b></td><td style="text-align:right"><b style="color:var(--brand)">₹10,33,389</b></td></tr>
-            </table></div>
-            <div class="row" style="margin-top:12px">
-              <button class="btn" onclick="toast('Revised proposal v3 generated & sent on WhatsApp + email')">${ic('doc')} Generate v3 & Send</button>
-              <button class="btn ghost">${ic('eye')} Preview PDF</button>
-              <button class="btn ghost">Duplicate</button>
-            </div>
-          </div>
-          <div class="card">
-            <h3>Terms & Conditions</h3><div class="sub">Reusable library · auto-attached</div>
-            <div style="font-size:12px;color:#4a4550;line-height:1.7">
-              <p style="margin:0 0 8px">• Extra km @ ₹18–₹95/km by car class.</p>
-              <p style="margin:0 0 8px">• Extra hour billed per slab.</p>
-              <p style="margin:0 0 8px">• Outstation: driver allowance + night charge.</p>
-              <p style="margin:0 0 8px">• Parking, toll & state tax at actuals.</p>
-              <p style="margin:0 0 8px">• 50% advance to confirm; balance on closure.</p>
-            </div>
-            <div class="sectitle"><h2 style="font-size:13px">Versions</h2><div class="line"></div></div>
-            <div style="font-size:12px;line-height:2">
-              <div style="display:flex;justify-content:space-between"><span>v1 — initial</span><span class="tag t-mut">₹11.1L</span></div>
-              <div style="display:flex;justify-content:space-between"><span>v2 — 6% off</span><span class="tag t-warn">current</span></div>
-              <div style="display:flex;justify-content:space-between"><span>v3 — pending</span><span class="small">drafting…</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= BOOKINGS ================= -->
-      <section class="screen" data-screen="book">
-        <div class="row" style="justify-content:space-between;margin-bottom:8px">
-          <div class="tabbar" style="margin:0;border:0">
-            <a class="on">Live (4)</a><a>Upcoming (6)</a><a>Closed (39)</a>
-          </div>
-          <button class="btn">${ic('plus')} New Booking</button>
-        </div>
-        <div class="grid g2">
-          <div class="card">
-            <div class="row" style="justify-content:space-between"><div><h3>Agarwal–Mittal Wedding 💍</h3><div class="sub">Jaipur · Rambagh Palace · 28 Jun – 01 Jul</div></div><span class="tag t-ok">Live</span></div>
-            <div class="flow" style="margin:10px 0"><span class="chip">320 guests</span><span class="chip">18 cars/day</span><span class="chip">WA group: AMK•Agarwal-Mittal</span></div>
-            <div class="small" style="margin-bottom:4px">Allocation completeness</div><div class="bar"><i style="width:92%"></i></div>
-            <div class="row" style="margin-top:12px"><button class="btn sm" onclick="go('matrix')">Open Matrix</button><button class="btn sm ghost" onclick="go('dispatch')">WhatsApp</button><button class="btn sm ghost" onclick="go('bill')">Bill</button></div>
-          </div>
-          <div class="card">
-            <div class="row" style="justify-content:space-between"><div><h3>Sharma–Bansal Wedding 💍</h3><div class="sub">Udaipur · The Leela Palace · 02 – 05 Jul</div></div><span class="tag t-info">Starts in 3 days</span></div>
-            <div class="flow" style="margin:10px 0"><span class="chip">210 guests</span><span class="chip">12 cars/day</span><span class="chip">3 vendor cars pending</span></div>
-            <div class="small" style="margin-bottom:4px">Allocation completeness</div><div class="bar"><i style="width:71%"></i></div>
-            <div class="row" style="margin-top:12px"><button class="btn sm" onclick="go('matrix')">Open Matrix</button><button class="btn sm ghost" onclick="go('fleet')">Assign Vendors</button></div>
-          </div>
-          <div class="card">
-            <div class="row" style="justify-content:space-between"><div><h3>Khanna–Rao Wedding 💍</h3><div class="sub">Jodhpur · Umaid Bhawan · 06 – 08 Jul</div></div><span class="tag t-mut">Planning</span></div>
-            <div class="flow" style="margin:10px 0"><span class="chip">160 guests</span><span class="chip">S-Class VIP</span><span class="chip">9 cars/day</span></div>
-            <div class="small" style="margin-bottom:4px">Allocation completeness</div><div class="bar"><i style="width:38%"></i></div>
-            <div class="row" style="margin-top:12px"><button class="btn sm" onclick="go('matrix')">Open Matrix</button></div>
-          </div>
-          <div class="card">
-            <div class="row" style="justify-content:space-between"><div><h3>Verma Anniversary</h3><div class="sub">Ranthambore · Aman-i-Khás · 07 – 09 Jul</div></div><span class="tag t-mut">Planning</span></div>
-            <div class="flow" style="margin:10px 0"><span class="chip">40 guests</span><span class="chip">Safari + transfers</span><span class="chip">4 cars/day</span></div>
-            <div class="small" style="margin-bottom:4px">Allocation completeness</div><div class="bar"><i style="width:22%"></i></div>
-            <div class="row" style="margin-top:12px"><button class="btn sm" onclick="go('matrix')">Open Matrix</button></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= BOOKING FORM / CONTRACT ================= -->
-      <section class="screen" data-screen="form">
-        <div class="miniflow">
-          <div class="step"><span class="n">1</span>Estimate</div><span class="ar">→</span>
-          <div class="step"><span class="n">2</span>Advance received</div><span class="ar">→</span>
-          <div class="step"><span class="n">3</span>Confirmed</div><span class="ar">→</span>
-          <div class="step"><span class="n">4</span>Contract signed</div><span class="ar">→</span>
-          <div class="step"><span class="n">5</span>Accounts + reminders</div>
-        </div>
-        <div class="row" style="justify-content:space-between;align-items:center;margin:16px 0 10px">
-          <div><h3 style="margin:0">Booking Form — AMK/2026/0013</h3><div class="sub">Yolo Entertainment · editable · mirrors your V13 form</div></div>
-          <div class="row">
-            <span class="tag t-warn" style="align-self:center">ESTIMATE ONLY</span>
-            <button class="btn ghost sm" onclick="toast('Form unlocked — edit any field; changes auto-version the contract')">${ic('doc')} Edit</button>
-            <button class="btn gold sm" onclick="toast('Marked CONFIRMED · contract PDF generated · payment schedule pushed to Accounts + reminders set')">${ic('bolt')} Confirm & generate contract</button>
-          </div>
-        </div>
-        <div class="note" style="margin-bottom:14px">Every field is editable. When a client changes requirements, edit here once — the contract, the accounts ledger and the payment reminders all update (and the version is logged). Gold-highlighted fields show a recent edit.</div>
-
-        <div class="card">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">1 · Booking control details</h2><div class="line"></div></div>
-          <div class="fgrid">
-            <div class="fld"><div class="flbl">Booking reference no.</div><div class="fval">AMK/2026/0013</div></div>
-            <div class="fld"><div class="flbl">Date of issue</div><div class="fval">27-06-2026</div></div>
-            <div class="fld"><div class="flbl">Sales rep / coordinator</div><div class="fval">Shubham Panwar · +91 98291 43903</div></div>
-            <div class="fld"><div class="flbl">Email</div><div class="fval">amktravelindia@gmail.com</div></div>
-            <div class="fld wide"><div class="flbl">Quotation / discussion reference</div><div class="fval">Innova Crysta & Urbania quotation issued to Mr. Pratik Hemdev</div></div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">2 · Client KYC & billing</h2><div class="line"></div></div>
-          <div class="fgrid">
-            <div class="fld"><div class="flbl">Client / company</div><div class="fval">Yolo Entertainment</div></div>
-            <div class="fld"><div class="flbl">Authorised person</div><div class="fval">Mr. Pratik Hemdev</div></div>
-            <div class="fld"><div class="flbl">Mobile</div><div class="fval">+91 98204 24953</div></div>
-            <div class="fld"><div class="flbl">Alternate / emergency</div><div class="fval">+91 70281 45907</div></div>
-            <div class="fld"><div class="flbl">Email</div><div class="fval">pratik@yoloent.in</div></div>
-            <div class="fld"><div class="flbl">GSTIN / PAN</div><div class="fval">—</div></div>
-            <div class="fld wide"><div class="flbl">Billing address</div><div class="fval">Excellency Society, 701/A, Lokhandwala Complex, 4th Cross Lane (Lokhandwala Market), Andheri West — 400053</div></div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">3 · Event / travel details</h2><div class="line"></div></div>
-          <div class="fgrid t3">
-            <div class="fld edit"><div class="flbl">Movement name</div><div class="fval">Innova Crysta & Urbania pick-up / drop movement</div></div>
-            <div class="fld"><div class="flbl">Travel dates</div><div class="fval">29-06-2026 → 02-07-2026</div></div>
-            <div class="fld"><div class="flbl">Reporting date</div><div class="fval">29-06-2026</div></div>
-            <div class="fld"><div class="flbl">Pick-up / reporting</div><div class="fval">Jaipur Intl T2 & Jaipur Railway Station</div></div>
-            <div class="fld"><div class="flbl">Drop / destination</div><div class="fval">Hyatt Regency, Mansarovar</div></div>
-            <div class="fld"><div class="flbl">Passengers</div><div class="fval">150</div></div>
-            <div class="fld"><div class="flbl">Operation type</div><div class="fval">Pick-up, drop & local use</div></div>
-            <div class="fld"><div class="flbl">Departure</div><div class="fval">02-07-2026</div></div>
-            <div class="fld"><div class="flbl">Departure location</div><div class="fval">Jaipur Intl T2</div></div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">4 · Service & commercial summary</h2><div class="line"></div></div>
-          <div class="matrix-wrap"><table class="matrix" style="min-width:760px">
-            <thead><tr><th>Date</th><th>Service</th><th>Route / usage</th><th>Vehicle</th><th>Qty</th><th>Rate (₹)</th><th>Remarks</th></tr></thead>
-            <tbody>
-              <tr><td>29 Jun–02 Jul</td><td>Pick-up, drop & local</td><td>JAI Airport ↔ Hyatt Regency</td><td>Innova Crysta</td><td>~50</td><td>1,550 incl. parking</td><td>Full-day cab = max 3 pick-ups/drops; no disposal use</td></tr>
-              <tr><td>29 Jun–02 Jul</td><td>Pick-up, drop & local</td><td>JAI Airport ↔ Hyatt Regency</td><td>Urbania</td><td>—</td><td>4,300 incl. parking</td><td>Full-day 12 hr / 120 km</td></tr>
-              <tr><td>Full day</td><td>Local use</td><td>—</td><td>Innova Crysta (12h/120km)</td><td>—</td><td>3,600</td><td>—</td></tr>
-            </tbody>
-          </table></div>
-          <div class="fgrid t3" style="margin-top:12px">
-            <div class="fld"><div class="flbl">Quoted total</div><div class="fval">As per sheet</div></div>
-            <div class="fld"><div class="flbl">Taxes</div><div class="fval">N/A</div></div>
-            <div class="fld"><div class="flbl">Extra km / hour</div><div class="fval">At actuals</div></div>
-            <div class="fld wide"><div class="flbl">Included</div><div class="fval">Water bottles, wet tissues & neat clean vehicle</div></div>
-            <div class="fld"><div class="flbl">Exclusions</div><div class="fval">—</div></div>
-          </div>
-        </div>
-
-        <div class="grid g3" style="margin-top:14px">
-          <div class="card" style="grid-column:span 2">
-            <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">Payment schedule → Accounts + reminders</h2><div class="line"></div></div>
-            <table>
-              <thead><tr><th>Stage</th><th>Due date</th><th>Amount</th><th>Mode</th><th>Status</th><th>Auto-action</th></tr></thead>
-              <tbody>
-                <tr><td>Booking advance</td><td>15-06-2026</td><td>₹50,000</td><td>Cash</td><td><span class="tag t-ok">Received</span></td><td><span class="chip">→ Accounts</span></td></tr>
-                <tr><td>Second advance</td><td>26-06-2026</td><td>₹1,00,000</td><td>—</td><td><span class="tag t-warn">Due in 2d</span></td><td><span class="chip">⏰ Reminder set</span></td></tr>
-                <tr><td>Final payment</td><td>02-07-2026</td><td>Balance</td><td>—</td><td><span class="tag t-mut">Scheduled</span></td><td><span class="chip">⏰ + gates invoice</span></td></tr>
-              </tbody>
-            </table>
-            <div class="note" style="margin-top:12px">Each stage posts to the <b>accounts ledger</b> as a receivable and arms a <b>WhatsApp + email reminder</b> before the due date — with overdue escalation. Final payment gates release of the invoice / documents (per your T&C).</div>
-          </div>
-          <div class="card">
-            <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">5 · Payment commitment</h2><div class="line"></div></div>
-            <div class="fld" style="margin-bottom:10px"><div class="flbl">Outstanding balance</div><div class="fval">As per sheet</div></div>
-            <div class="fld" style="margin-bottom:10px"><div class="flbl">Invoice in name of</div><div class="fval">Mr. Pratik Hemdev</div></div>
-            <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-top:6px"><span>Advance received</span><b class="up">₹50,000</b></div>
-            <button class="btn sm" style="width:100%;justify-content:center;margin-top:10px" onclick="toast('Razorpay reminder + payment link sent to Mr. Pratik Hemdev')">Send reminder now</button>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">6 · Operational notes</h2><div class="line"></div></div>
-          <div class="fgrid">
-            <div class="fld"><div class="flbl">Hotel / venue</div><div class="fval">Hyatt Regency, Mansarovar, Jaipur</div></div>
-            <div class="fld"><div class="flbl">Guest handling</div><div class="fval">—</div></div>
-            <div class="fld"><div class="flbl">Driver reporting / night halt</div><div class="fval">—</div></div>
-            <div class="fld"><div class="flbl">Commitments</div><div class="fval">Neat & clean vehicle will be provided</div></div>
-          </div>
-        </div>
-
-        <div class="grid g2" style="margin-top:14px">
-          <div class="card">
-            <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">7 · Terms & conditions</h2><div class="line"></div></div>
-            <div style="font-size:12px;color:#4a4550;line-height:1.7">
-              <p style="margin:0 0 7px">• Confirmed on signed form / written approval + agreed advance.</p>
-              <p style="margin:0 0 7px">• Extra km, hours, parking, state tax, permits, monument parking at actuals unless included.</p>
-              <p style="margin:0 0 7px">• Route plan & guest schedule shared in writing; last-minute changes subject to feasibility & cost.</p>
-              <p style="margin:0 0 7px">• Cleaning / damage / penalty from passenger usage recoverable from client.</p>
-              <p style="margin:0 0 7px">• Final balance per schedule; delays may hold service / invoices.</p>
-              <p style="margin:0">• Jaipur jurisdiction only.</p>
-            </div>
-          </div>
-          <div class="card">
-            <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">8 · Approval & acceptance</h2><div class="line"></div></div>
-            <div class="fgrid">
-              <div class="fld"><div class="flbl">For client</div><div class="fval">Pratik Hemdev · e-signed</div></div>
-              <div class="fld"><div class="flbl">For AMK Travels</div><div class="fval">Shubham Panwar · e-signed</div></div>
-            </div>
-            <div class="note" style="margin-top:12px;background:var(--okbg);border-color:#bfe6cf;color:#176844">✓ Both parties e-signed on WhatsApp / email — contract locked. Any edit creates v2 for re-approval.</div>
-            <button class="btn ghost sm" style="margin-top:12px" onclick="toast('Signed contract PDF downloaded')">${ic('eye')} Download signed contract PDF</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= FLEET & VENDORS ================= -->
-      <section class="screen" data-screen="fleet">
-        <div class="tabbar"><a class="on">In-house Fleet</a><a>Vendor Network</a><a>Rate Card</a></div>
-        <div class="grid g4" style="margin-bottom:16px">
-          <div class="card kpi"><div class="lab">In-house cars</div><div class="val">22</div><div class="small">8 classes</div></div>
-          <div class="card kpi"><div class="lab">Vendor partners</div><div class="val">37</div><div class="small">across 4 cities</div></div>
-          <div class="card kpi"><div class="lab">Available now</div><div class="val">14</div><div class="delta up">ready to assign</div></div>
-          <div class="card kpi"><div class="lab">On duty</div><div class="val">63</div><div class="small">live tracking</div></div>
-        </div>
-        <div class="card">
-          <h3>Fleet & Vendor availability</h3><div class="sub">Asset-light: own premium classes, broker the rest. System auto-suggests cheapest available car that meets class.</div>
-          <table>
-            <thead><tr><th>Car class</th><th>Source</th><th>Reg / Vendor</th><th>City</th><th>Status</th><th>Day rate (12/120)</th></tr></thead>
-            <tbody>
-              <tr><td><b>Toyota Innova Crysta</b></td><td><span class="tag t-info">In-house</span></td><td>RJ14 CX 8821</td><td>Jaipur</td><td><span class="tag t-warn">On duty</span></td><td>₹6,500</td></tr>
-              <tr><td><b>Sedan (Dzire/Ciaz)</b></td><td><span class="tag t-mut">Vendor</span></td><td>Sharma Travels</td><td>Jaipur</td><td><span class="tag t-ok">Available</span></td><td>₹3,800</td></tr>
-              <tr><td><b>Mercedes E-Class</b></td><td><span class="tag t-info">In-house</span></td><td>RJ14 CB 4410</td><td>Jaipur</td><td><span class="tag t-warn">On duty</span></td><td>₹18,000</td></tr>
-              <tr><td><b>Toyota Vellfire</b></td><td><span class="tag t-info">In-house</span></td><td>RJ14 VF 0007</td><td>Jaipur</td><td><span class="tag t-ok">Available</span></td><td>₹22,000</td></tr>
-              <tr><td><b>Force Urbania (13-str)</b></td><td><span class="tag t-mut">Vendor</span></td><td>Marwar Coaches</td><td>Jodhpur</td><td><span class="tag t-ok">Available</span></td><td>₹14,000</td></tr>
-              <tr><td><b>Mercedes S-Class</b></td><td><span class="tag t-info">In-house</span></td><td>RJ19 SC 0007</td><td>Jodhpur</td><td><span class="tag t-mut">Assigned</span></td><td>₹32,000</td></tr>
-              <tr><td><b>Volvo 45-seater</b></td><td><span class="tag t-mut">Vendor</span></td><td>Lake City Travels</td><td>Udaipur</td><td><span class="tag t-warn">On duty</span></td><td>₹28,000</td></tr>
-              <tr><td><b>Volvo 45 (with washroom)</b></td><td><span class="tag t-mut">Vendor</span></td><td>Lake City Travels</td><td>Udaipur</td><td><span class="tag t-ok">Available</span></td><td>₹38,000</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card" style="margin-top:16px">
-          <h3>Fixed Airport-Transfer Rate Card</h3><div class="sub">Editable per route · the rate engine the proposals pull from</div>
-          <table>
-            <thead><tr><th>Route</th><th>Sedan</th><th>Innova</th><th>E-Class</th><th>Vellfire</th></tr></thead>
-            <tbody>
-              <tr><td>Jaipur Intl (JAI) → Rambagh Palace</td><td>₹1,400</td><td>₹2,200</td><td>₹6,500</td><td>₹7,500</td></tr>
-              <tr><td>JAI → Fairmont Jaipur</td><td>₹1,900</td><td>₹2,800</td><td>₹7,200</td><td>₹8,200</td></tr>
-              <tr><td>JAI → The Leela Palace</td><td>₹2,100</td><td>₹3,000</td><td>₹7,400</td><td>₹8,500</td></tr>
-              <tr><td>JAI → Hyatt Regency / Rambagh / City</td><td>₹1,300</td><td>₹2,000</td><td>₹6,200</td><td>₹7,200</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ================= VENDOR WORK ORDER ================= -->
-      <section class="screen" data-screen="vwo">
-        <div class="miniflow">
-          <div class="step"><span class="n">1</span>Issue work order</div><span class="ar">→</span>
-          <div class="step"><span class="n">2</span>Vendor confirms rates</div><span class="ar">→</span>
-          <div class="step"><span class="n">3</span>Vehicle + driver details</div><span class="ar">→</span>
-          <div class="step"><span class="n">4</span>Dispatch</div><span class="ar">→</span>
-          <div class="step"><span class="n">5</span>Payout in accounts</div>
-        </div>
-        <div class="row" style="justify-content:space-between;align-items:center;margin:16px 0 10px">
-          <div><h3 style="margin:0">Vendor Work Order — AMK/VENDOR/2026/009</h3><div class="sub">BBR Services · issued event-wise · mirrors your V1 vendor form</div></div>
-          <div class="row">
-            <span class="tag t-info" style="align-self:center">Issued to vendor</span>
-            <button class="btn ghost sm" onclick="toast('Vendor form shared with BBR Services on WhatsApp + email')">${ic('wa')} Share to vendor</button>
-            <button class="btn gold sm" onclick="toast('Vendor confirmed rates & inclusions · payout armed in accounts')">${ic('bolt')} Mark confirmed</button>
-          </div>
-        </div>
-        <div class="note" style="margin-bottom:14px">Issued for every event/booking so there is 100% clarity on the deliverable — vehicles, rates, inclusions and commitments in writing. The vendor confirms commercials and fills vehicle & driver details before dispatch; those flow straight into the Allocation Matrix, the guest's driver card and the accounts payout.</div>
-
-        <div class="card">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">1 · Form control & issuing</h2><div class="line"></div></div>
-          <div class="fgrid">
-            <div class="fld"><div class="flbl">Form reference no.</div><div class="fval">AMK/VENDOR/2026/009</div></div>
-            <div class="fld"><div class="flbl">Date of issue</div><div class="fval">27-06-2026</div></div>
-            <div class="fld"><div class="flbl">Issued by</div><div class="fval">Shubham Panwar · Asst. Sales – Wedding · +91 98291 43903</div></div>
-            <div class="fld"><div class="flbl">Client / event reference</div><div class="fval">Pick-up, drop & full-day Jaipur local movement</div></div>
-            <div class="fld wide"><div class="flbl">Issued to vendor</div><div class="fval">Mr. Ramesh Meena · BBR Services</div></div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">2 · Vendor KYC</h2><div class="line"></div></div>
-          <div class="fgrid">
-            <div class="fld"><div class="flbl">Vendor / company</div><div class="fval">BBR Services</div></div>
-            <div class="fld"><div class="flbl">Contact person</div><div class="fval">Mr. Ramesh Meena</div></div>
-            <div class="fld"><div class="flbl">Mobile</div><div class="fval">+91 97855 55733</div></div>
-            <div class="fld"><div class="flbl">Email</div><div class="fval">info.bbrtours@gmail.com</div></div>
-            <div class="fld"><div class="flbl">GSTIN / PAN</div><div class="fval">08BPHPM2353H1ZU</div></div>
-            <div class="fld"><div class="flbl">Bank details</div><div class="fval">On letterhead / cancelled cheque</div></div>
-            <div class="fld wide"><div class="flbl">Office address</div><div class="fval">B-20, Ganesh Vihar, Model Town Road, Malviya Nagar, Jaipur 302017</div></div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">3 · Client movement summary</h2><div class="line"></div></div>
-          <div class="fgrid t3">
-            <div class="fld"><div class="flbl">Client</div><div class="fval">Mr. Pratik Hemdev</div></div>
-            <div class="fld"><div class="flbl">Travel dates</div><div class="fval">29-06 → 02-07-2026</div></div>
-            <div class="fld"><div class="flbl">Guest strength</div><div class="fval">150 approx</div></div>
-            <div class="fld"><div class="flbl">Vehicle requirement</div><div class="fval">Innova Crysta & Urbania</div></div>
-            <div class="fld"><div class="flbl">Duty pattern</div><div class="fval">4 days Jaipur local movement</div></div>
-            <div class="fld"><div class="flbl">Protocol</div><div class="fval">VIP guest movement</div></div>
-            <div class="fld wide"><div class="flbl">Sector / route</div><div class="fval">Jaipur Airport T2 ↔ Hyatt Regency Mansarovar ↔ Jaipur Airport T2</div></div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">4 · Date-wise vehicle requirement</h2><div class="line"></div></div>
-          <div class="matrix-wrap"><table class="matrix" style="min-width:680px">
-            <thead><tr><th>Date</th><th>Movement</th><th>Route</th><th>Vehicle / qty</th><th>Duty type</th><th>Min. guarantee</th></tr></thead>
-            <tbody>
-              <tr><td>29 Jun – 02 Jul 2026</td><td>Pick-up, drop & local</td><td>JAI T2 ↔ Hyatt Regency ↔ JAI T2</td><td>Innova & Urbania · ~50</td><td>Pick-up, drop & local</td><td>Full-day 12h / 120km</td></tr>
-            </tbody>
-          </table></div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">5 · Commercials — vendor to confirm</h2><div class="line"></div></div>
-          <div class="matrix-wrap"><table class="matrix" style="min-width:720px">
-            <thead><tr><th>#</th><th>Item</th><th>Basis</th><th>Vehicle</th><th>Qty</th><th>Rate (₹)</th><th>Amount (₹)</th><th>Vendor</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td>Pick-up & drop</td><td>per trip</td><td>Innova Crysta</td><td>50</td><td>1,200</td><td>60,000</td><td><span class="tag t-ok">Confirmed</span></td></tr>
-              <tr><td>2</td><td>Pick-up & drop</td><td>per trip</td><td>Urbania</td><td>TBF</td><td>3,500</td><td>—</td><td><span class="tag t-warn">Pending</span></td></tr>
-              <tr><td>3</td><td>Parking</td><td>on actuals</td><td>—</td><td>50</td><td>Actuals</td><td>Actuals</td><td><span class="tag t-mut">—</span></td></tr>
-              <tr><td>4</td><td>Local use 12h / 120km</td><td>full day</td><td>Innova Crysta</td><td>TBF</td><td>3,400</td><td>—</td><td><span class="tag t-warn">Pending</span></td></tr>
-            </tbody>
-          </table></div>
-          <div class="fgrid t3" style="margin-top:12px">
-            <div class="fld"><div class="flbl">Quoted total</div><div class="fval">₹60,000</div></div>
-            <div class="fld"><div class="flbl">Extra km</div><div class="fval">₹16 / km</div></div>
-            <div class="fld"><div class="flbl">Extra hour</div><div class="fval">₹300 / hour</div></div>
-          </div>
-        </div>
-
-        <div class="grid g3" style="margin-top:14px">
-          <div class="card" style="grid-column:span 2">
-            <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">Vendor payout schedule → Accounts (payable)</h2><div class="line"></div></div>
-            <table>
-              <thead><tr><th>Stage</th><th>Amount</th><th>Mode</th><th>Status</th><th>Auto-action</th></tr></thead>
-              <tbody>
-                <tr><td>Advance</td><td>₹50,000</td><td>Cheque</td><td><span class="tag t-ok">Paid</span></td><td><span class="chip">→ Accounts (payable)</span></td></tr>
-                <tr><td>Second advance</td><td>—</td><td>—</td><td><span class="tag t-mut">Scheduled</span></td><td><span class="chip">⏰ Reminder</span></td></tr>
-                <tr><td>Final / balance</td><td>After duty</td><td>—</td><td><span class="tag t-mut">On closure</span></td><td><span class="chip">After duty slips verified</span></td></tr>
-              </tbody>
-            </table>
-            <div class="note" style="margin-top:12px">Payout sits in accounts as a <b>vendor payable</b>; the final balance releases only after the duty slips and pre-dispatch vehicle details are verified.</div>
-          </div>
-          <div class="card">
-            <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">10 · Documents to collect</h2><div class="line"></div></div>
-            <div style="font-size:12.5px;line-height:2.1">
-              <div style="display:flex;justify-content:space-between"><span>GST / PAN</span><span class="tag t-ok">✓</span></div>
-              <div style="display:flex;justify-content:space-between"><span>Cancelled cheque</span><span class="tag t-warn">pending</span></div>
-              <div style="display:flex;justify-content:space-between"><span>Vehicle RC / permits</span><span class="tag t-warn">pending</span></div>
-              <div style="display:flex;justify-content:space-between"><span>Driver licence</span><span class="tag t-warn">pending</span></div>
-              <div style="display:flex;justify-content:space-between"><span>Stamped rate confirmation</span><span class="tag t-ok">✓</span></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">8A · Vehicle & chauffeur details — vendor fills before dispatch</h2><div class="line"></div></div>
-          <div class="sub" style="margin-top:-4px">These feed the Allocation Matrix and the guest's driver card automatically.</div>
-          <div class="matrix-wrap"><table class="matrix" style="min-width:720px">
-            <thead><tr><th>#</th><th>Vehicle model</th><th>Type</th><th>Plate no.</th><th>Driver</th><th>Driver mobile</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td>Innova Crysta</td><td>SUV</td><td>RJ14 TC 6620</td><td>Ram Singh</td><td>+91 99••• 12</td><td><span class="tag t-ok">→ In matrix</span></td></tr>
-              <tr style="background:#fffaf0"><td>2</td><td>Force Urbania</td><td>13-seater</td><td style="color:var(--muted)">vendor to fill</td><td style="color:var(--muted)">vendor to fill</td><td style="color:var(--muted)">vendor to fill</td><td><span class="tag t-warn">Awaiting vendor</span></td></tr>
-            </tbody>
-          </table></div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">8 · Operational notes</h2><div class="line"></div></div>
-          <div class="fgrid">
-            <div class="fld"><div class="flbl">Reporting instructions</div><div class="fval">Vehicle numbers, driver names & mobiles ≥ 1 day before duty</div></div>
-            <div class="fld"><div class="flbl">Hotel / venue</div><div class="fval">Hyatt Regency Mansarovar</div></div>
-            <div class="fld"><div class="flbl">Emergency escalation</div><div class="fval">AMK ops desk · Shubham Panwar & Kabir Goyal</div></div>
-            <div class="fld"><div class="flbl">Special requirement</div><div class="fval">VIP handling, punctual reporting, clean AC cab, luggage support</div></div>
-          </div>
-        </div>
-
-        <div class="grid g2" style="margin-top:14px">
-          <div class="card">
-            <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">6 · Mandatory inclusions</h2><div class="line"></div></div>
-            <div style="font-size:12px;color:#4a4550;line-height:1.7">
-              <p style="margin:0 0 7px">• Vehicle: Innova Crysta & Urbania only.</p>
-              <p style="margin:0 0 7px">• Full-day booking = max 3 pick-ups / drops.</p>
-              <p style="margin:0 0 7px">• Driver knows full itinerary, hotel & airport points, timings.</p>
-              <p style="margin:0 0 7px">• Neat, guest-ready cab + 3 water bottles per vehicle.</p>
-              <p style="margin:0">• Chauffeur in clean uniform, well-groomed throughout.</p>
-            </div>
-          </div>
-          <div class="card">
-            <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">7 · Exclusions / deviations</h2><div class="line"></div></div>
-            <div style="font-size:12px;color:#4a4550;line-height:1.7">
-              <p style="margin:0 0 7px">• Extra billing, toll, DA, extras — pre-approved by AMK in writing.</p>
-              <p style="margin:0 0 7px">• Vehicle / seat change or major reporting delay = service deviation.</p>
-              <p style="margin:0">• Breakdown, driver replacement, late reporting, amenity shortfall — rectified at vendor cost.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:14px">
-          <div class="sectitle" style="margin-top:0"><h2 style="font-size:13px">9 · Vendor confirmation & acceptance</h2><div class="line"></div></div>
-          <div class="fgrid">
-            <div class="fld"><div class="flbl">Issued by — AMK Travels</div><div class="fval">Shubham Panwar · e-signed</div></div>
-            <div class="fld"><div class="flbl">Accepted by — vendor</div><div class="fval">BBR Services · awaiting e-acceptance</div></div>
-          </div>
-          <div class="note" style="margin-top:12px">By accepting, the vendor confirms vehicle category, rates, inclusions, exclusions, duty pattern and payment terms exactly as written in this work order.</div>
-        </div>
-      </section>
-
-      <!-- ================= ALLOCATION MATRIX ================= -->
-      <section class="screen" data-screen="matrix">
-        <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:10px">
-          <div><h3 style="margin:0">Arrival & Travel Matrix — Agarwal–Mittal</h3><div class="sub">The old Excel sheet, now live. Assign a car → driver + guest auto-notified on WhatsApp instantly.</div></div>
-          <div class="row"><button class="btn ghost sm">${ic('doc')} Import Excel</button><button class="btn gold sm" onclick="toast('Auto-allocation ran: 11 cars matched to guests by class, city & timing')">${ic('bolt')} Auto-Allocate</button></div>
-        </div>
-        <div class="matrix-wrap">
-          <table class="matrix">
-            <thead><tr><th>Guest / Group</th><th>Pax</th><th>Arrival</th><th>Pick-up</th><th>Drop</th><th>Car class</th><th>Car / Driver</th><th>Notify</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>Rohan Agarwal</td><td>13</td><td>AI 611 · 14:20</td><td>JAI T2</td><td>Rambagh Palace</td><td>Vellfire</td><td>RJ14 VF 7 · Mahesh</td><td><span class="tag t-ok">✓ Sent</span></td><td><span class="tag t-info">En route</span></td></tr>
-              <tr><td>Priya Mittal</td><td>2</td><td>—</td><td>Rambagh</td><td>Amber Fort</td><td>E-Class</td><td>RJ14 CB 4410 · Suresh</td><td><span class="tag t-ok">✓ Sent</span></td><td><span class="tag t-ok">Done</span></td></tr>
-              <tr><td>Mittal Family</td><td>6</td><td>6E 245 · 15:10</td><td>JAI T2</td><td>Rambagh</td><td>Innova</td><td>RJ14 CX 8821 · Ramesh</td><td><span class="tag t-ok">✓ Sent</span></td><td><span class="tag t-info">En route</span></td></tr>
-              <tr><td>Bridesmaids grp</td><td>11</td><td>—</td><td>Rambagh</td><td>Chokhi Dhani</td><td>Urbania</td><td><span style="color:var(--muted)">— unassigned —</span></td><td><span class="tag t-mut">—</span></td><td><span class="tag t-warn">Needs car</span></td></tr>
-              <tr><td>Out-station guests</td><td>40</td><td>Train · 18:30</td><td>JP Station</td><td>Rambagh</td><td>Volvo 45</td><td>RJ27 V 1209 · Iqbal</td><td><span class="tag t-ok">✓ Sent</span></td><td><span class="tag t-mut">Scheduled</span></td></tr>
-              <tr><td>Sharma (groom side)</td><td>4</td><td>AI 989 · 19:05</td><td>JAI T2</td><td>Fairmont</td><td>Innova</td><td><span style="color:var(--muted)">— unassigned —</span></td><td><span class="tag t-mut">—</span></td><td><span class="tag t-warn">Needs car</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="grid g3" style="margin-top:16px">
-          <div class="card" style="grid-column:span 2">
-            <h3>Assign car → "Bridesmaids group"</h3><div class="sub">Pick from available cars; on confirm, both driver & guest get WhatsApp instantly</div>
-            <table>
-              <thead><tr><th>Available car</th><th>Source</th><th>Driver</th><th>Rate</th><th></th></tr></thead>
-              <tbody>
-                <tr><td>Force Urbania</td><td><span class="tag t-mut">Vendor · Marwar</span></td><td>Karan +91 98••• 21</td><td>₹14,000</td><td><button class="btn sm" onclick="toast('Assigned! WhatsApp sent to driver Karan + 11 guests with pickup card')">Assign</button></td></tr>
-                <tr><td>Tempo Traveller</td><td><span class="tag t-mut">Vendor · Pink City</span></td><td>Anil +91 90••• 88</td><td>₹11,500</td><td><button class="btn sm ghost" onclick="toast('Assigned & notified')">Assign</button></td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="card">
-            <h3>Matrix health</h3><div class="sub">Agarwal–Mittal</div>
-            <div style="font-size:12.5px;line-height:2.1">
-              <div style="display:flex;justify-content:space-between"><span>Movements planned</span><b>96</b></div>
-              <div style="display:flex;justify-content:space-between"><span>Cars assigned</span><b style="color:var(--ok)">88</b></div>
-              <div style="display:flex;justify-content:space-between"><span>Awaiting car</span><b style="color:var(--warn)">8</b></div>
-              <div style="display:flex;justify-content:space-between"><span>Guests notified</span><b>88</b></div>
-            </div>
-            <div class="bar" style="margin-top:10px"><i style="width:92%"></i></div>
-            <div class="small" style="margin-top:6px">92% allocation complete</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= WHATSAPP DISPATCH ================= -->
-      <section class="screen" data-screen="dispatch">
-        <div class="grid g3">
-          <div class="card">
-            <h3>Wedding WhatsApp groups</h3><div class="sub">One group auto-created per wedding head</div>
-            <div style="line-height:2.2;font-size:12.5px">
-              <div style="display:flex;justify-content:space-between;align-items:center"><span>💍 AMK • Agarwal-Mittal</span><span class="tag t-ok">live</span></div>
-              <div style="display:flex;justify-content:space-between;align-items:center"><span>💍 AMK • Sharma-Bansal</span><span class="tag t-info">3d</span></div>
-              <div style="display:flex;justify-content:space-between;align-items:center"><span>💍 AMK • Khanna-Rao</span><span class="tag t-mut">plan</span></div>
-              <div style="display:flex;justify-content:space-between;align-items:center"><span>🐅 AMK • Verma Anniv.</span><span class="tag t-mut">plan</span></div>
-            </div>
-            <div class="sectitle"><h2 style="font-size:13px">Auto-templates</h2><div class="line"></div></div>
-            <div class="small" style="line-height:1.9">• Guest pick-up card<br>• Driver duty card<br>• "Car arriving" live ping<br>• Daily movement summary<br>• Payment reminder</div>
-          </div>
-
-          <div class="card" style="padding:0;overflow:hidden">
-            <div class="wabar">${ic('wa')} AMK • Agarwal-Mittal · 14 members</div>
-            <div class="wa" style="border-radius:0">
-              <div class="bub"><div class="who">🤖 AMK Bot</div>New movement assigned. Guest <b>Rohan Agarwal (+12)</b> · AI 611 landing 14:20 · → Rambagh Palace.<div class="meta">14:02 ✓✓</div></div>
-              <div class="bub me">Car & driver?<div class="meta">14:03</div></div>
-              <div class="bub"><div class="who">🤖 AMK Bot</div>🚗 <b>Vellfire RJ14 VF 0007</b><br>👨‍✈️ Mahesh · +91 98290 •••21<br>📍 Live track: amk.live/agm-rohan<div class="meta">14:03 ✓✓</div></div>
-              <div class="bub"><div class="who">🤖 AMK Bot</div>✅ Guest notified directly on their number with driver details + photo.<div class="meta">14:03 ✓✓</div></div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h3>What the driver receives</h3><div class="sub">Direct WhatsApp — no group needed</div>
-            <div class="wa">
-              <div class="bub"><div class="who">Duty Card · 29 Jun</div>🙏 <b>Mahesh ji</b>, today's duty:<br><br>👤 Guest: Rohan Agarwal +12<br>✈️ AI 611 · T2 · 14:20<br>📍 Pick: JAI T2 Arrivals<br>🏨 Drop: Rambagh Palace<br>🅿️ Parking slip → upload in app<br><br>Guest mobile: +91 99••• 45<div class="meta">auto-sent 12:00 ✓✓</div></div>
-            </div>
-            <div class="sectitle"><h2 style="font-size:13px">What the guest receives</h2><div class="line"></div></div>
-            <div class="wa">
-              <div class="bub"><div class="who">AMK Travels India</div>Welcome to Jaipur, Mr Agarwal! 🌸<br>Your car is confirmed:<br>🚗 Toyota Vellfire (white)<br>👨‍✈️ Mahesh · +91 98290 •••21<br>📍 Live: amk.live/agm-rohan<div class="meta">✓✓ read</div></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= DUTY SLIPS ================= -->
-      <section class="screen" data-screen="duty">
-        <div class="grid g3">
-          <div class="card" style="grid-column:span 2">
-            <h3>Digital Duty Slips & Expense capture</h3><div class="sub">Drivers close duty from phone · km, hours, toll, parking auto-feed the bill</div>
-            <table>
-              <thead><tr><th>Duty slip</th><th>Car / Driver</th><th>Hrs / Km</th><th>Toll+Parking</th><th>Slip</th><th>Status</th></tr></thead>
-              <tbody>
-                <tr><td>DS-4471</td><td>Vellfire · Mahesh</td><td>11.5h / 96km</td><td>₹420</td><td><span class="tag t-ok">📷 ✓</span></td><td><span class="tag t-ok">Closed</span></td></tr>
-                <tr><td>DS-4472</td><td>E-Class · Suresh</td><td>14h / 142km</td><td>₹260</td><td><span class="tag t-ok">📷 ✓</span></td><td><span class="tag t-ok">Closed</span></td></tr>
-                <tr><td>DS-4473</td><td>Volvo 45 · Iqbal</td><td>—</td><td>—</td><td><span class="tag t-warn">pending</span></td><td><span class="tag t-warn">On duty</span></td></tr>
-                <tr><td>DS-4474</td><td>S-Class · Devendra</td><td>9h / 70km</td><td>₹0</td><td><span class="tag t-ok">📷 ✓</span></td><td><span class="tag t-info">Review</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="card">
-            <h3>Daily office / staff expenses</h3><div class="sub">Logged staff-wise, city-wise</div>
-            <table>
-              <thead><tr><th>Head</th><th>City</th><th>₹</th></tr></thead>
-              <tbody>
-                <tr><td>Fuel (fleet)</td><td>Jaipur</td><td>₹38,200</td></tr>
-                <tr><td>Driver allowance</td><td>Udaipur</td><td>₹14,500</td></tr>
-                <tr><td>Vendor payout</td><td>Jodhpur</td><td>₹62,000</td></tr>
-                <tr><td>Office / tea</td><td>Jaipur</td><td>₹2,100</td></tr>
-                <tr><td>Repairs</td><td>Ranthambore</td><td>₹8,900</td></tr>
-              </tbody>
-            </table>
-            <div style="display:flex;justify-content:space-between;margin-top:8px;font-weight:800"><span>Total out</span><span style="color:var(--danger)">₹1,25,700</span></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= BILLING & GST ================= -->
-      <section class="screen" data-screen="bill">
-        <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:8px">
-          <div><h3 style="margin:0">Auto-generated GST Invoice</h3><div class="sub">On group closure, every duty slip + transfer + toll + parking rolls into one bill</div></div>
-          <button class="btn gold" onclick="toast('GST e-invoice + IRN generated · PDF ready to print/email')">${ic('rupee')} Generate GST e-Invoice</button>
-        </div>
-        <div class="grid g3">
-          <div class="inv" style="grid-column:span 2">
-            <div class="hd">
-              <div><div style="font-size:18px;font-weight:800">AMK Travels India</div><small>Jaipur · Udaipur · Jodhpur · Ranthambore<br>GSTIN 08ABCDE1234F1Z5</small></div>
-              <div style="text-align:right"><div style="font-weight:800">TAX INVOICE</div><small>#AMK-2611 · 01 Jul 2026<br>Place of supply: Rajasthan (08)</small></div>
-            </div>
-            <div class="bd">
-              <div class="small" style="margin-bottom:10px">Billed to: <b>Agarwal–Mittal Wedding</b> · Rambagh Palace, Jaipur</div>
-              <table>
-                <thead><tr><th>#</th><th>Description</th><th>HSN/SAC</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>
-                <tbody>
-                  <tr><td>1</td><td>Full-day cars (12/120) — Innova ×4 days</td><td>9964</td><td>72</td><td>₹6,500</td><td>₹4,68,000</td></tr>
-                  <tr><td>2</td><td>Luxury full-day — E-Class / Vellfire</td><td>9964</td><td>16</td><td>₹18,500</td><td>₹2,96,000</td></tr>
-                  <tr><td>3</td><td>Airport / station transfers</td><td>9964</td><td>58</td><td>₹3,200</td><td>₹1,85,600</td></tr>
-                  <tr><td>4</td><td>Volvo guest shuttle (24h)</td><td>9964</td><td>9</td><td>₹28,000</td><td>₹2,52,000</td></tr>
-                  <tr><td>5</td><td>Parking & toll (at actuals)</td><td>9964</td><td>—</td><td>—</td><td>₹18,400</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="card">
-            <h3>Tax summary</h3>
-            <div class="tot" style="justify-content:flex-start"><table>
-              <tr><td>Taxable value</td><td style="text-align:right">₹12,20,000</td></tr>
-              <tr><td>CGST @ 2.5%</td><td style="text-align:right">₹30,500</td></tr>
-              <tr><td>SGST @ 2.5%</td><td style="text-align:right">₹30,500</td></tr>
-              <tr><td>Toll/parking (no GST)</td><td style="text-align:right">₹18,400</td></tr>
-              <tr style="border-top:2px solid var(--brand)"><td><b>Grand Total</b></td><td style="text-align:right"><b style="color:var(--brand);font-size:15px">₹12,99,400</b></td></tr>
-            </table></div>
-            <div class="sectitle"><h2 style="font-size:13px">Payments</h2><div class="line"></div></div>
-            <div style="font-size:12.5px;line-height:2">
-              <div style="display:flex;justify-content:space-between"><span>Advance (cheque)</span><span class="tag t-ok">₹6,00,000</span></div>
-              <div style="display:flex;justify-content:space-between"><span>Balance due</span><b style="color:var(--danger)">₹6,99,400</b></div>
-            </div>
-            <button class="btn sm" style="margin-top:12px;width:100%;justify-content:center" onclick="toast('Razorpay payment link sent on WhatsApp')">Send payment link</button>
-            <button class="btn sm ghost" style="margin-top:8px;width:100%;justify-content:center" onclick="toast('Invoice PDF downloaded')">Download / Print PDF</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= CASH FLOW ================= -->
-      <section class="screen" data-screen="cash">
-        <div class="grid g4">
-          <div class="card kpi"><div class="lab"><span class="ic b-ok">${ic('rupee')}</span>Inflow — Today</div><div class="val">₹4.82L</div><div class="small">Cash ₹1.1L · Cheque ₹3.0L · UPI ₹0.72L</div></div>
-          <div class="card kpi"><div class="lab"><span class="ic b-warn">${ic('flow')}</span>Outflow — Today</div><div class="val">₹1.96L</div><div class="small">Vendors, fuel, salary, toll</div></div>
-          <div class="card kpi"><div class="lab"><span class="ic b-info">${ic('rupee')}</span>Net Today</div><div class="val up">+₹2.86L</div><div class="delta up">healthy</div></div>
-          <div class="card kpi"><div class="lab"><span class="ic b-brand">${ic('flow')}</span>Receivables</div><div class="val">₹38.4L</div><div class="small">7 invoices open</div></div>
-        </div>
-        <div class="grid g3" style="margin-top:16px">
-          <div class="card" style="grid-column:span 2">
-            <h3>Daily inflow vs outflow — June</h3><div class="sub">Cash · cheque · UPI combined</div>
-            <div class="spark" style="height:90px">
-              <i style="height:50%"></i><i style="height:62%"></i><i style="height:44%"></i><i style="height:70%"></i><i style="height:82%"></i><i style="height:58%"></i><i style="height:90%"></i><i style="height:66%"></i><i style="height:78%"></i><i style="height:54%"></i>
-            </div>
-            <div class="legend" style="margin-top:10px"><span><i style="background:var(--gold)"></i>Inflow</span><span><i style="background:var(--brand2)"></i>Outflow</span></div>
-          </div>
-          <div class="card">
-            <h3>City-wise net (today)</h3>
-            <div style="line-height:2.4;font-size:12.5px">
-              <div style="display:flex;justify-content:space-between"><span>Jaipur</span><b class="up">+₹1.62L</b></div><div class="bar"><i style="width:82%"></i></div>
-              <div style="display:flex;justify-content:space-between;margin-top:8px"><span>Udaipur</span><b class="up">+₹0.74L</b></div><div class="bar"><i style="width:48%"></i></div>
-              <div style="display:flex;justify-content:space-between;margin-top:8px"><span>Jodhpur</span><b class="up">+₹0.41L</b></div><div class="bar"><i style="width:30%"></i></div>
-              <div style="display:flex;justify-content:space-between;margin-top:8px"><span>Ranthambore</span><b class="up">+₹0.09L</b></div><div class="bar"><i style="width:12%"></i></div>
-            </div>
-          </div>
-        </div>
-        <div class="card" style="margin-top:16px">
-          <h3>Today's ledger</h3><div class="sub">Every cash / cheque / UPI movement, auto-logged</div>
-          <table>
-            <thead><tr><th>Time</th><th>Type</th><th>Description</th><th>Mode</th><th>City</th><th>In</th><th>Out</th></tr></thead>
-            <tbody>
-              <tr><td>09:14</td><td><span class="tag t-ok">In</span></td><td>Agarwal advance balance</td><td>Cheque</td><td>Jaipur</td><td class="up">₹3,00,000</td><td>—</td></tr>
-              <tr><td>10:02</td><td><span class="tag t-danger">Out</span></td><td>Vendor payout — Lake City</td><td>UPI</td><td>Udaipur</td><td>—</td><td>₹62,000</td></tr>
-              <tr><td>11:40</td><td><span class="tag t-ok">In</span></td><td>Dell offsite token</td><td>UPI</td><td>Udaipur</td><td class="up">₹72,000</td><td>—</td></tr>
-              <tr><td>12:25</td><td><span class="tag t-danger">Out</span></td><td>Fuel — fleet</td><td>Cash</td><td>Jaipur</td><td>—</td><td>₹38,200</td></tr>
-              <tr><td>13:10</td><td><span class="tag t-ok">In</span></td><td>Iyer advance</td><td>Cash</td><td>Ranthambore</td><td class="up">₹1,10,000</td><td>—</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ================= REPORTS ================= -->
-      <section class="screen" data-screen="reports">
-        <div class="grid g4">
-          <div class="card kpi"><div class="lab">MTD Revenue</div><div class="val">₹1.94 Cr</div><div class="delta up">▲ 23% YoY</div></div>
-          <div class="card kpi"><div class="lab">Gross margin</div><div class="val">31%</div><div class="delta up">asset-light</div></div>
-          <div class="card kpi"><div class="lab">Avg / wedding</div><div class="val">₹48L</div><div class="small">last 12</div></div>
-          <div class="card kpi"><div class="lab">Vendor spend</div><div class="val">₹71L</div><div class="small">52% of cost</div></div>
-        </div>
-        <div class="grid g2" style="margin-top:16px">
-          <div class="card"><h3>Revenue by city — MTD</h3>
-            <div style="line-height:2.6;font-size:12.5px;margin-top:6px">
-              <div style="display:flex;justify-content:space-between"><span>Jaipur</span><b>₹86L</b></div><div class="bar"><i style="width:90%"></i></div>
-              <div style="display:flex;justify-content:space-between;margin-top:6px"><span>Udaipur</span><b>₹61L</b></div><div class="bar"><i style="width:64%"></i></div>
-              <div style="display:flex;justify-content:space-between;margin-top:6px"><span>Jodhpur</span><b>₹34L</b></div><div class="bar"><i style="width:36%"></i></div>
-              <div style="display:flex;justify-content:space-between;margin-top:6px"><span>Ranthambore</span><b>₹13L</b></div><div class="bar"><i style="width:14%"></i></div>
-            </div>
-          </div>
-          <div class="card"><h3>Revenue by car class</h3>
-            <div style="display:flex;gap:16px;align-items:center;margin-top:8px">
-              <div class="donut" style="background:conic-gradient(var(--brand) 0 34%,var(--gold) 34% 60%,var(--info) 60% 82%,#d9cfbf 82% 100%)"><div class="hole">₹1.94<br><span class="small">Cr</span></div></div>
-              <div style="font-size:12px;line-height:2">
-                <div><i style="background:var(--brand);width:10px;height:10px;display:inline-block;border-radius:3px;margin-right:6px"></i>Luxury (S/E/Vellfire) 34%</div>
-                <div><i style="background:var(--gold);width:10px;height:10px;display:inline-block;border-radius:3px;margin-right:6px"></i>Innova/Sedan 26%</div>
-                <div><i style="background:var(--info);width:10px;height:10px;display:inline-block;border-radius:3px;margin-right:6px"></i>Volvo/Coach 22%</div>
-                <div><i style="background:#d9cfbf;width:10px;height:10px;display:inline-block;border-radius:3px;margin-right:6px"></i>Urbania/Tempo 18%</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= GUEST LIVE VIEW ================= -->
-      <section class="screen" data-screen="guest">
-        <div class="grid g3">
-          <div style="grid-column:span 1;display:flex;justify-content:center">
-            <div class="phone"><div class="scr">
-              <div class="phh"><small>AMK Travels · Live</small><div style="font-size:16px;font-weight:700;margin-top:3px">Agarwal–Mittal Wedding</div><div style="font-size:11px;color:#f0cf9c">Welcome, Mr Rohan Agarwal 🌸</div></div>
-              <div class="phbody">
-                <div style="font-weight:700;margin-bottom:10px;font-size:12.5px">Your ride — right now</div>
-                <div class="live done"><div class="ti"><i></i><span></span></div><div class="tx"><b>Car assigned ✓</b><p>Toyota Vellfire (white) · RJ14 VF 0007</p></div></div>
-                <div class="live done"><div class="ti"><i></i><span></span></div><div class="tx"><b>Driver on the way ✓</b><p>Mahesh · +91 98290 •••21 · ⭐ 4.9</p></div></div>
-                <div class="live"><div class="ti"><i></i><span></span></div><div class="tx"><b>Arriving in 6 min</b><p>At JAI T2 Arrivals · Gate 3</p></div></div>
-                <div class="live" style="opacity:.5"><div class="ti"><i></i></div><div class="tx"><b>Drop — Rambagh Palace</b><p>ETA 15:05</p></div></div>
-                <button class="btn gold" style="width:100%;justify-content:center;margin-top:6px">📞 Call driver</button>
-                <div style="margin-top:14px;font-weight:700;font-size:12.5px">Today's wedding schedule</div>
-                <div class="small" style="line-height:2;margin-top:4px">19:00 — Sangeet · Amber Fort<br>Shuttle from lobby every 20 min<br>22:30 — Return shuttle</div>
-              </div>
-            </div></div>
-          </div>
-          <div class="card" style="grid-column:span 2">
-            <h3>Guest live experience</h3><div class="sub">Delivered 2 ways — no app install needed</div>
-            <div class="miniflow" style="margin:10px 0 18px">
-              <div class="step"><span class="n">1</span>WhatsApp live pings</div><span class="ar">+</span>
-              <div class="step"><span class="n">2</span>Personal live link (OTP by mobile)</div>
-            </div>
-            <div class="note" style="margin-bottom:12px">Each guest gets a private link tied to <b>their mobile number</b>. They see only their car, driver, live ETA & the wedding schedule. No login friction — OTP on the number you assign.</div>
-            <table>
-              <thead><tr><th>Guest</th><th>Car</th><th>Live status</th><th>Link opened</th></tr></thead>
-              <tbody>
-                <tr><td>Rohan Agarwal</td><td>Vellfire</td><td><span class="tag t-info">Arriving 6 min</span></td><td>✓ 3× today</td></tr>
-                <tr><td>Mittal Family</td><td>Innova</td><td><span class="tag t-info">En route</span></td><td>✓ 1×</td></tr>
-                <tr><td>Out-station grp</td><td>Volvo 45</td><td><span class="tag t-mut">Scheduled 18:30</span></td><td>—</td></tr>
-              </tbody>
-            </table>
-            <div class="sectitle"><h2 style="font-size:13px">Host / family dashboard</h2><div class="line"></div></div>
-            <div class="small">The wedding host sees the whole group live: who's landed, which cars are out, what's pending — the same matrix, read-only.</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= SETTINGS ================= -->
-      <section class="screen" data-screen="settings">
-        <div class="grid g2">
-          <div class="card">
-            <h3>Login by mobile number (OTP)</h3><div class="sub">You assign the number → that's their login. No passwords.</div>
-            <table>
-              <thead><tr><th>Name</th><th>Mobile (login)</th><th>Role</th><th>City</th></tr></thead>
-              <tbody>
-                <tr><td>Anant K.</td><td>+91 98290 •••00</td><td><span class="tag t-danger">Owner</span></td><td>All</td></tr>
-                <tr><td>Amit S.</td><td>+91 98290 •••11</td><td><span class="tag t-info">Sales</span></td><td>Jaipur</td></tr>
-                <tr><td>Neha R.</td><td>+91 98290 •••22</td><td><span class="tag t-info">Ops Mgr</span></td><td>Jodhpur</td></tr>
-                <tr><td>Accounts</td><td>+91 98290 •••33</td><td><span class="tag t-warn">Finance</span></td><td>All</td></tr>
-                <tr><td>Mahesh (driver)</td><td>+91 98290 •••21</td><td><span class="tag t-mut">Driver app</span></td><td>Jaipur</td></tr>
-              </tbody>
-            </table>
-            <button class="btn sm" style="margin-top:12px">${ic('plus')} Add user</button>
-          </div>
-          <div class="card">
-            <h3>Roles & access</h3><div class="sub">Who sees what</div>
-            <table>
-              <thead><tr><th>Module</th><th>Owner</th><th>Sales</th><th>Ops</th><th>Finance</th><th>Driver</th></tr></thead>
-              <tbody>
-                <tr><td>CRM / Leads</td><td>✓</td><td>✓</td><td>•</td><td>—</td><td>—</td></tr>
-                <tr><td>Allocation Matrix</td><td>✓</td><td>—</td><td>✓</td><td>—</td><td>view own</td></tr>
-                <tr><td>Billing & GST</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
-                <tr><td>Cash Flow</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
-                <tr><td>Duty slips</td><td>✓</td><td>—</td><td>✓</td><td>✓</td><td>own</td></tr>
-              </tbody>
-            </table>
-            <div class="note" style="margin-top:14px">All actions are logged with the mobile number + timestamp → full audit trail across 4 cities.</div>
-          </div>
-        </div>
-      </section>
-
-    </div>
+<div id="login">
+  <div class="box">
+    <div class="logo">AMK</div>
+    <h1>AMK Travels India — ERP</h1>
+    <p>Login with your mobile number &amp; password</p>
+    <input id="lmobile" class="inp" placeholder="Mobile number" inputmode="numeric"/>
+    <input id="lpass" class="inp" type="password" placeholder="Password"/>
+    <button class="btn gold full" onclick="doLogin()">Login</button>
+    <p style="margin-top:14px;font-size:11px">Admin first login: <b>9251966666 / 9251966666</b><br>Add your team (Operations, Accounts, Sales) under Team &amp; Users.</p>
   </div>
 </div>
+
+<div id="app">
+  <aside class="side">
+    <div class="brand"><div class="lg">AMK</div><div><b>AMK Travels</b><small>India · ERP</small></div></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="who" id="who"></div>
+  </aside>
+  <div class="main">
+    <header class="top"><h2 id="title">Dashboard</h2><div class="sp"></div>
+      <button class="btn sm gold" id="addBtn" onclick="addCurrent()">+ Add</button>
+      <button class="btn sm ghost" onclick="logout()">Logout</button>
+    </header>
+    <div class="wrap" id="view"></div>
+  </div>
+</div>
+
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 <div class="toast" id="toast"></div>
+<div id="print"></div>
 
 <script>
-// inline SVG icon set
-function ic(n){const p={
- grid:'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z',
- users:'M16 11a4 4 0 10-8 0 4 4 0 008 0zM2 21a6 6 0 0112 0M16 3a4 4 0 010 8',
- doc:'M6 2h9l5 5v15H6zM14 2v6h6',
- cal:'M3 4h18v18H3zM3 9h18M8 2v4M16 2v4',
- car:'M5 16l1-5h12l1 5M5 16h14v3H5zM7 16v-2M17 16v-2M3 16h2M19 16h2',
- matrix:'M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18',
- wa:'M3 21l1.6-4A8 8 0 113 21zM8 10h.01M12 10h.01M16 10h.01',
- slip:'M6 2h12v20l-3-2-3 2-3-2-3 2zM9 7h6M9 11h6',
- rupee:'M6 3h12M6 8h12M14 3c4 0 4 5 0 5H6l7 8',
- flow:'M3 17l6-6 4 4 8-8M21 7v6h-6',
- chart:'M3 3v18h18M7 14v4M12 9v9M17 5v13',
- phone:'M7 2h10v20H7zM11 18h2',
- gear:'M12 8a4 4 0 100 8 4 4 0 000-8zM2 12h3M19 12h3M12 2v3M12 19v3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2',
- search:'M11 11m-7 0a7 7 0 1014 0 7 7 0 10-14 0M21 21l-4-4',
- plus:'M12 5v14M5 12h14',
- bolt:'M13 2L4 14h7l-1 8 9-12h-7z',
- eye:'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 100 6 3 3 0 000-6'
- };
- return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="'+(p[n]||'')+'"/></svg>';
-}
-// render icons placed via ${ic()} markers left as text fallback — replace any literal ${...}
-document.querySelectorAll('*').forEach(function(el){
-  if(el.children.length===0 && el.innerHTML.indexOf('${ic(')>-1){
-    el.innerHTML = el.innerHTML.replace(/\$\{ic\('(\w+)'\)\}/g,(m,n)=>ic(n));
-  }
-});
-// also handle nav/top which were authored with ${ic('x')} — global sweep
-document.body.innerHTML = document.body.innerHTML.replace(/\$\{ic\('(\w+)'\)\}/g,(m,n)=>ic(n));
+"use strict";
+var KEY="amk_db_v1", SESS="amk_user_v1", CITIES=["Jaipur","Udaipur","Jodhpur","Ranthambore"], TCITY=["All","Jaipur","Udaipur","Jodhpur","Ranthambore"];
+var ROLES=["Admin","Operations","Accounts","Sales"];
+var BTYPE=["Group","Inbound (P2P)","Recce","Local full-day","Airport transfer"];
 
-var titles={dash:['Command Dashboard','Home / Live overview · Monday, 29 Jun 2026'],
- crm:['CRM / Leads','Sales pipeline across 4 cities'],
- prop:['Proposals','Build · negotiate · revise · win'],
- book:['Bookings','Confirmed weddings & groups'],
- form:['Booking Form / Contract','Editable estimate → signed contract · payments to accounts'],
- fleet:['Vendors & Fleet','In-house + vendor network · rate card'],
- vwo:['Vendor Work Order','Event-wise vendor requirement → locked deliverables'],
- matrix:['Allocation Matrix','Arrival & Travel Matrix — live'],
- dispatch:['WhatsApp Dispatch','One group per wedding · auto-notify'],
- duty:['Duty Slips & Expenses','Digital slips · daily expense log'],
- bill:['Billing & GST','Auto-invoice on group closure'],
- cash:['Cash Flow','Daily in / out · city-wise'],
- reports:['Reports','Revenue · margin · utilisation'],
- guest:['Guest Live View','What your guests see'],
- settings:['Settings & Users','Mobile-login · roles · audit']};
+var ENT={
+ bookings:{label:"Bookings",sing:"Booking",fields:[
+   {n:"ref",l:"Booking ref",t:"text"},{n:"client",l:"Client / company",t:"text",req:1},
+   {n:"type",l:"Type",t:"sel",o:BTYPE},{n:"event",l:"Event / movement",t:"text"},
+   {n:"city",l:"City",t:"sel",o:CITIES},{n:"from",l:"From date",t:"date"},{n:"to",l:"To date",t:"date"},
+   {n:"hotel",l:"Hotel / venue",t:"text"},{n:"pax",l:"Passengers",t:"num"},
+   {n:"status",l:"Status",t:"sel",o:["Estimate","Confirmed","Closed"]}],
+   cols:[["ref","Ref"],["client","Client"],["type","Type"],["city","City"],["from","From"],["status","Status"]]},
+ itineraries:{label:"Itineraries",sing:"Itinerary"},
+ movements:{label:"Allocation / Movements",sing:"Movement",fields:[
+   {n:"booking",l:"Booking ref",t:"text"},{n:"type",l:"Type",t:"sel",o:BTYPE},
+   {n:"guest",l:"Guest / group",t:"text",req:1},{n:"pax",l:"Pax",t:"num"},{n:"date",l:"Date",t:"date"},
+   {n:"pickup",l:"Pick-up",t:"text"},{n:"drop",l:"Drop",t:"text"},
+   {n:"car",l:"Car",t:"text"},{n:"driver",l:"Driver / chauffeur",t:"text"},{n:"driverMobile",l:"Driver mobile",t:"text"},
+   {n:"status",l:"Status",t:"sel",o:["Scheduled","Assigned","En route","Completed"]}],
+   cols:[["date","Date"],["guest","Guest"],["type","Type"],["pickup","Pick-up"],["drop","Drop"],["car","Car"],["status","Status"]]},
+ vendors:{label:"Vendor Work Orders",sing:"Vendor WO",fields:[
+   {n:"wo",l:"WO ref",t:"text"},{n:"vendor",l:"Vendor",t:"text",req:1},{n:"contact",l:"Contact person",t:"text"},
+   {n:"mobile",l:"Mobile",t:"text"},{n:"gstin",l:"GSTIN / PAN",t:"text"},{n:"booking",l:"For booking ref",t:"text"},
+   {n:"vehicles",l:"Vehicles",t:"text"},{n:"amount",l:"Payout amount",t:"num"},
+   {n:"status",l:"Status",t:"sel",o:["Issued","Confirmed","Completed"]}],
+   cols:[["wo","WO"],["vendor","Vendor"],["vehicles","Vehicles"],["amount","Payout"],["status","Status"]]},
+ duty:{label:"Duty Slips",sing:"Duty Slip",fields:[
+   {n:"date",l:"Date",t:"date"},{n:"booking",l:"Booking / group ref",t:"text"},
+   {n:"slip",l:"Slip type",t:"sel",o:["Regular","Start of group","End of group","Recce"]},
+   {n:"car",l:"Car",t:"text"},{n:"driver",l:"Driver",t:"text"},
+   {n:"hours",l:"Hours",t:"num"},{n:"km",l:"Km",t:"num"},{n:"toll",l:"Toll",t:"num"},{n:"parking",l:"Parking",t:"num"},
+   {n:"status",l:"Status",t:"sel",o:["Open","Closed"]}],
+   cols:[["date","Date"],["booking","Group"],["slip","Slip"],["car","Car"],["driver","Driver"],["hours","Hrs"],["status","Status"]]},
+ recce:{label:"Recce Vehicles",sing:"Recce vehicle",fields:[
+   {n:"client",l:"Client / account",t:"text",req:1},{n:"date",l:"Date given",t:"date"},
+   {n:"vehicle",l:"Vehicle",t:"text"},{n:"days",l:"Days / usage",t:"num"},{n:"cost",l:"Cost",t:"num"},
+   {n:"purpose",l:"Purpose / notes",t:"text"},{n:"status",l:"Status",t:"sel",o:["Open","Billed"]}],
+   cols:[["date","Date"],["client","Client"],["vehicle","Vehicle"],["cost","Cost"],["status","Status"]]},
+ ledger:{label:"Cash Flow",sing:"Entry",fields:[
+   {n:"date",l:"Date",t:"date"},{n:"type",l:"Type",t:"sel",o:["IN","OUT"]},{n:"head",l:"Description / head",t:"text",req:1},
+   {n:"mode",l:"Mode",t:"sel",o:["Cash","Cheque","UPI","Bank"]},{n:"city",l:"City",t:"sel",o:CITIES},{n:"amount",l:"Amount",t:"num"}],
+   cols:[["date","Date"],["type","Type"],["head","Head"],["mode","Mode"],["city","City"],["amount","Amount"]]},
+ clients:{label:"Clients",sing:"Client",fields:[
+   {n:"name",l:"Company / client",t:"text",req:1},{n:"contact",l:"Contact person",t:"text"},{n:"mobile",l:"Mobile",t:"text"},
+   {n:"email",l:"Email",t:"text"},{n:"gstin",l:"GSTIN / PAN",t:"text"},{n:"city",l:"City",t:"sel",o:CITIES}],
+   cols:[["name","Client"],["contact","Contact"],["mobile","Mobile"],["city","City"]]},
+ users:{label:"Team & Users",sing:"Team member",fields:[
+   {n:"name",l:"Name",t:"text",req:1},{n:"mobile",l:"Mobile (login)",t:"text",req:1},{n:"password",l:"Password",t:"text",req:1},
+   {n:"role",l:"Role",t:"sel",o:ROLES},{n:"city",l:"City",t:"sel",o:TCITY}],
+   cols:[["name","Name"],["mobile","Mobile"],["role","Role"],["city","City"]]}
+};
+var NAV=[["dash","Dashboard","▤"],["bookings","Bookings","\u{1F4C5}"],["itineraries","Itineraries","\u{1F9ED}"],
+ ["movements","Allocation","\u{1F697}"],["vendors","Vendor WO","\u{1F4CB}"],["duty","Duty Slips","\u{1F9FE}"],
+ ["recce","Recce Vehicles","\u{1F50E}"],["invoices","Invoices (GST)","₹"],["ledger","Cash Flow","\u{1F4B0}"],
+ ["clients","Clients","\u{1F464}"],["users","Team & Users","\u{1F465}"],["settings","Settings","⚙"]];
+var ACCESS={
+ Admin:["dash","bookings","itineraries","movements","vendors","duty","recce","invoices","ledger","clients","users","settings"],
+ Operations:["dash","bookings","itineraries","movements","vendors","duty","recce","settings"],
+ Accounts:["dash","bookings","recce","invoices","ledger","clients","settings"],
+ Sales:["dash","clients","bookings","itineraries","settings"]
+};
 
-function go(s){
-  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
-  var el=document.querySelector('[data-screen="'+s+'"]'); if(el)el.classList.add('active');
-  document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('active',a.dataset.s===s));
-  if(titles[s]){document.getElementById('ttl').textContent=titles[s][0];document.getElementById('crumb').textContent=titles[s][1];}
-  document.querySelector('.content').scrollTo&&window.scrollTo({top:0,behavior:'smooth'});
+function todayISO(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function seed(){var t=todayISO();return {
+ _seq:{users:4,clients:1,bookings:2,vendors:1,movements:1,duty:1,ledger:1,invoices:0,recce:1,itineraries:1},
+ users:[
+  {id:1,name:"Admin (Anant)",mobile:"9251966666",password:"9251966666",role:"Admin",city:"All"},
+  {id:2,name:"Operations",mobile:"9829018862",password:"9829018862",role:"Operations",city:"Jaipur"},
+  {id:3,name:"Sales",mobile:"9829143903",password:"9829143903",role:"Sales",city:"Jaipur"},
+  {id:4,name:"Accounts",mobile:"9251966667",password:"9251966667",role:"Accounts",city:"All"}],
+ clients:[{id:1,name:"Yolo Entertainment",contact:"Pratik Hemdev",mobile:"9820424953",email:"pratik@yoloent.in",gstin:"",city:"Jaipur"}],
+ bookings:[
+  {id:1,ref:"AMK/2026/0013",client:"Yolo Entertainment",type:"Group",event:"Innova & Urbania movement",city:"Jaipur",from:t,to:"2026-07-02",hotel:"Hyatt Regency Mansarovar",pax:150,status:"Confirmed"},
+  {id:2,ref:"AMK/2026/0021",client:"Dell",type:"Inbound (P2P)",event:"Corporate inbound 1-2 cars",city:"Udaipur",from:t,to:t,hotel:"Leela Palace",pax:6,status:"Confirmed"}],
+ vendors:[{id:1,wo:"AMK/VENDOR/2026/009",vendor:"BBR Services",contact:"Ramesh Meena",mobile:"9785555733",gstin:"08BPHPM2353H1ZU",booking:"AMK/2026/0013",vehicles:"Innova Crysta & Urbania",amount:60000,status:"Issued"}],
+ movements:[{id:1,booking:"AMK/2026/0013",type:"Group",guest:"Rohan Agarwal +12",pax:13,date:t,pickup:"Jaipur Airport T2",drop:"Hyatt Regency",car:"Innova Crysta",driver:"Ram Singh",driverMobile:"9900000012",status:"Assigned"}],
+ duty:[{id:1,date:t,booking:"AMK/2026/0021",slip:"Start of group",car:"Innova Crysta",driver:"Ram Singh",hours:0,km:0,toll:0,parking:0,status:"Open"}],
+ ledger:[{id:1,date:t,type:"IN",head:"Booking advance - Yolo Entertainment",mode:"Cheque",city:"Jaipur",amount:50000}],
+ invoices:[],
+ recce:[{id:1,client:"Yolo Entertainment",date:"2026-04-12",vehicle:"Toyota Fortuner",days:1,cost:25000,purpose:"Venue recce before wedding",status:"Open"}],
+ itineraries:[{id:1,title:"Dell inbound — 1-2 cars",client:"Dell",booking:"AMK/2026/0021",chauffeur:"Ram Singh",chauffeurMobile:"9900000012",vehicle:"Innova Crysta",type:"Inbound (P2P)",status:"Aligned",legs:[
+   {date:t,time:"09:00",from:"Udaipur Airport",to:"Leela Palace",note:"VIP pickup, start duty slip"},
+   {date:t,time:"14:00",from:"Leela Palace",to:"City Palace",note:"Sightseeing"},
+   {date:t,time:"18:00",from:"City Palace",to:"Leela Palace",note:"Return, end duty slip"}]}]
+};}
+function migrate(db){
+ if(!db._seq)db._seq={};
+ ["clients","bookings","vendors","movements","duty","ledger","invoices","recce","itineraries","users"].forEach(function(k){
+  if(!db[k])db[k]=[];if(db._seq[k]==null)db._seq[k]=db[k].reduce(function(m,r){return Math.max(m,r.id||0);},0);});
+ if(!db.users.some(function(u){return String(u.mobile).replace(/\D/g,"")==="9251966666";})){
+  db._seq.users++;db.users.push({id:db._seq.users,name:"Admin (Anant)",mobile:"9251966666",password:"9251966666",role:"Admin",city:"All"});}
+ return db;
 }
-document.getElementById('nav').addEventListener('click',function(e){
-  var a=e.target.closest('a'); if(a&&a.dataset.s){e.preventDefault();go(a.dataset.s);}
-});
-document.querySelectorAll('.tabbar').forEach(function(tb){
-  tb.addEventListener('click',function(e){var a=e.target.closest('a');if(a){tb.querySelectorAll('a').forEach(x=>x.classList.remove('on'));a.classList.add('on');}});
-});
-var T;
-function toast(msg){var t=document.getElementById('toast');t.innerHTML=ic('bolt')+'<span>'+msg+'</span>';t.classList.add('show');clearTimeout(T);T=setTimeout(()=>t.classList.remove('show'),2800);}
+function load(){var db;try{var r=localStorage.getItem(KEY);db=r?JSON.parse(r):seed();}catch(e){db=seed();}db=migrate(db);save(db);return db;}
+function save(db){localStorage.setItem(KEY,JSON.stringify(db));}
+function inr(n){n=Number(n||0);return "₹"+n.toLocaleString("en-IN");}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];});}
+function toast(m){var t=document.getElementById("toast");t.textContent=m;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove("show");},2600);}
+var DB=load(), CUR="dash", ROLE="Admin";
+
+function doLogin(){var m=document.getElementById("lmobile").value.replace(/\D/g,""),p=document.getElementById("lpass").value;
+ DB=load();var u=DB.users.find(function(x){return String(x.mobile).replace(/\D/g,"")===m && String(x.password)===p;});
+ if(!u){toast("Wrong mobile or password");return;}
+ localStorage.setItem(SESS,JSON.stringify({mobile:u.mobile}));startApp();}
+function logout(){localStorage.removeItem(SESS);location.reload();}
+function startApp(){var s=JSON.parse(localStorage.getItem(SESS)||"null");DB=load();var u=null;
+ if(s)u=DB.users.find(function(x){return String(x.mobile).replace(/\D/g,"")===String(s.mobile).replace(/\D/g,"");});
+ if(!u){localStorage.removeItem(SESS);document.getElementById("login").style.display="flex";document.getElementById("app").style.display="none";return;}
+ ROLE=u.role;document.getElementById("login").style.display="none";document.getElementById("app").style.display="grid";
+ document.getElementById("who").textContent=u.name+" · "+u.role+(u.city&&u.city!=="All"?" · "+u.city:"");
+ var allow=ACCESS[ROLE]||["dash","settings"];
+ document.getElementById("nav").innerHTML=NAV.filter(function(x){return allow.indexOf(x[0])>=0;}).map(function(x){
+  return '<a data-k="'+x[0]+'" onclick="go(\''+x[0]+'\')"><span class="ico">'+x[2]+'</span>'+x[1]+'</a>';}).join("");
+ go("dash");}
+
+function can(k){return (ACCESS[ROLE]||[]).indexOf(k)>=0;}
+function go(k){if(!can(k)){toast("No access for "+ROLE+" role");return;}CUR=k;DB=load();
+ document.querySelectorAll("#nav a").forEach(function(a){a.classList.toggle("active",a.dataset.k===k);});
+ var titles={dash:"Dashboard",invoices:"Invoices (GST)",itineraries:"Inbound Itineraries",settings:"Settings & Backup"};
+ document.getElementById("title").textContent=titles[k]||(ENT[k]?ENT[k].label:k);
+ document.getElementById("addBtn").style.display=(ENT[k]&&k!=="itineraries"||k==="invoices"||k==="itineraries")?"inline-flex":"none";
+ if(k==="dash")renderDash();else if(k==="invoices")renderInvoices();else if(k==="itineraries")renderItins();else if(k==="settings")renderSettings();else renderList(k);}
+function addCurrent(){if(CUR==="invoices")openInvoice();else if(CUR==="itineraries")openItin();else if(ENT[CUR])openForm(CUR);}
+
+function stTag(v){return {Confirmed:"t-ok",Estimate:"t-warn",Closed:"t-mut",Issued:"t-warn",Completed:"t-ok",Assigned:"t-info","En route":"t-info",Scheduled:"t-mut",Open:"t-warn",Billed:"t-ok",Aligned:"t-info","Sent to chauffeur":"t-ok"}[v]||"t-mut";}
+
+function renderList(k){var e=ENT[k],rows=DB[k]||[];
+ var html='<table><thead><tr>'+e.cols.map(function(c){return '<th>'+c[1]+'</th>';}).join("")+'<th></th></tr></thead><tbody>';
+ if(!rows.length)html+='<tr><td colspan="'+(e.cols.length+1)+'" class="muted" style="padding:20px;text-align:center">No '+e.label.toLowerCase()+' yet. Click <b>+ Add</b>.</td></tr>';
+ rows.slice().reverse().forEach(function(r){html+='<tr>'+e.cols.map(function(c){var v=r[c[0]];
+   if(c[0]==="amount"||c[0]==="cost")return '<td>'+inr(v)+'</td>';
+   if(c[0]==="status")return '<td><span class="tag '+stTag(v)+'">'+esc(v)+'</span></td>';
+   if(c[0]==="type")return '<td><span class="tag '+(v==="IN"?"t-ok":(v==="OUT"?"t-danger":"t-mut"))+'">'+esc(v)+'</span></td>';
+   return '<td>'+esc(v)+'</td>';}).join("")
+   +'<td class="right"><button class="linkbtn" onclick="openForm(\''+k+'\','+r.id+')">Edit</button> &nbsp;<button class="linkbtn" style="color:#c0392b" onclick="del(\''+k+'\','+r.id+')">Delete</button></td></tr>';});
+ html+='</tbody></table>';
+ if(k==="ledger")html=ledgerSummary()+html;
+ if(k==="recce")html='<div class="empty" style="text-align:left;border-style:solid;margin-bottom:14px">Recce vehicles given to a client before the group. They stay <b>Open</b> until billed — at account closing, open them in an Invoice with <b>Pull recce charges</b> so the final bill includes cars used before the group.</div>'+html;
+ document.getElementById("view").innerHTML=html;}
+
+function openForm(k,id){var e=ENT[k];var rec=id?(DB[k].find(function(x){return x.id===id;})||{}):{};
+ var html='<h3>'+(id?"Edit ":"Add ")+e.sing+'</h3><div class="fg">';
+ e.fields.forEach(function(f){var val=rec[f.n]!=null?rec[f.n]:"";var wide=(f.n==="event"||f.n==="hotel"||f.n==="head"||f.n==="purpose")?" wide":"";
+  html+='<div class="f'+wide+'"><label>'+f.l+(f.req?" *":"")+'</label>';
+  if(f.t==="sel")html+='<select id="ff_'+f.n+'">'+(f.req?"":'<option value=""></option>')+f.o.map(function(o){return '<option'+(String(val)===o?" selected":"")+'>'+o+'</option>';}).join("")+'</select>';
+  else html+='<input id="ff_'+f.n+'" type="'+(f.t==="num"?"number":(f.t==="date"?"date":"text"))+'" value="'+esc(val)+'"/>';
+  html+='</div>';});
+ html+='</div><div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn gold" onclick="saveForm(\''+k+'\','+(id||0)+')">Save</button></div>';
+ document.getElementById("sheet").innerHTML=html;document.getElementById("modal").classList.add("open");}
+function saveForm(k,id){var e=ENT[k];var rec={},ok=true;
+ e.fields.forEach(function(f){var v=document.getElementById("ff_"+f.n).value;if(f.t==="num")v=v===""?0:Number(v);if(f.req&&(v===""||v==null))ok=false;rec[f.n]=v;});
+ if(!ok){toast("Fill required fields");return;}DB=load();
+ if(id){var i=DB[k].findIndex(function(x){return x.id===id;});rec.id=id;DB[k][i]=rec;}
+ else{DB._seq[k]=(DB._seq[k]||0)+1;rec.id=DB._seq[k];DB[k].push(rec);}
+ save(DB);closeModal();toast(e.sing+" saved");go(CUR);}
+function del(k,id){if(!confirm("Delete this "+ENT[k].sing+"?"))return;DB=load();DB[k]=DB[k].filter(function(x){return x.id!==id;});save(DB);toast("Deleted");go(CUR);}
+function closeModal(){document.getElementById("modal").classList.remove("open");}
+
+function renderDash(){var t=todayISO();
+ var active=DB.bookings.filter(function(b){return b.status==="Confirmed";}).length;
+ var todayMoves=DB.movements.filter(function(m){return m.date===t;});
+ var inToday=DB.ledger.filter(function(l){return l.date===t&&l.type==="IN";}).reduce(function(a,b){return a+Number(b.amount||0);},0);
+ var outToday=DB.ledger.filter(function(l){return l.date===t&&l.type==="OUT";}).reduce(function(a,b){return a+Number(b.amount||0);},0);
+ var recv=DB.invoices.reduce(function(a,b){return a+Math.max(0,(invTotals(b).total-Number(b.advance||0)));},0);
+ var recceOpen=DB.recce.filter(function(r){return r.status==="Open";}).length;
+ var html='<div class="cards">'
+ +kpi("Active bookings",active)+kpi("Movements today",todayMoves.length)+kpi("Itineraries",DB.itineraries.length)
+ +kpi("Open recce",recceOpen,"down")+kpi("Cash in (today)",inr(inToday),"up")+kpi("Receivables",inr(recv))+'</div>';
+ html+='<h3 class="sec">Today’s movements</h3>';
+ if(!todayMoves.length)html+='<div class="empty">No movements today. Add them under Allocation.</div>';
+ else{html+='<table><thead><tr><th>Guest</th><th>Type</th><th>Pick-up</th><th>Drop</th><th>Car</th><th>Driver</th><th>Status</th></tr></thead><tbody>';
+ todayMoves.forEach(function(m){html+='<tr><td>'+esc(m.guest)+'</td><td>'+esc(m.type||"")+'</td><td>'+esc(m.pickup)+'</td><td>'+esc(m.drop)+'</td><td>'+esc(m.car)+'</td><td>'+esc(m.driver)+' '+esc(m.driverMobile||"")+'</td><td><span class="tag '+stTag(m.status)+'">'+esc(m.status)+'</span></td></tr>';});
+ html+='</tbody></table>';}
+ html+='<h3 class="sec">Recent cash entries</h3>'+ledgerTable(DB.ledger.slice(-6).reverse());
+ document.getElementById("view").innerHTML=html;}
+function kpi(l,v,cls){return '<div class="card kpi"><div class="l">'+l+'</div><div class="v '+(cls||"")+'">'+v+'</div></div>';}
+
+function ledgerSummary(){var t=todayISO();
+ var inT=DB.ledger.filter(function(l){return l.date===t&&l.type==="IN";}).reduce(function(a,b){return a+Number(b.amount||0);},0);
+ var outT=DB.ledger.filter(function(l){return l.date===t&&l.type==="OUT";}).reduce(function(a,b){return a+Number(b.amount||0);},0);
+ var inAll=DB.ledger.filter(function(l){return l.type==="IN";}).reduce(function(a,b){return a+Number(b.amount||0);},0);
+ var outAll=DB.ledger.filter(function(l){return l.type==="OUT";}).reduce(function(a,b){return a+Number(b.amount||0);},0);
+ return '<div class="cards" style="margin-bottom:16px">'+kpi("In today",inr(inT),"up")+kpi("Out today",inr(outT),"down")+kpi("Net (all)",inr(inAll-outAll),inAll-outAll>=0?"up":"down")+kpi("Balance",inr(inAll-outAll))+'</div>';}
+function ledgerTable(rows){if(!rows.length)return '<div class="empty">No entries yet.</div>';
+ var h='<table><thead><tr><th>Date</th><th>Type</th><th>Head</th><th>Mode</th><th>City</th><th class="right">Amount</th></tr></thead><tbody>';
+ rows.forEach(function(l){h+='<tr><td>'+esc(l.date)+'</td><td><span class="tag '+(l.type==="IN"?"t-ok":"t-danger")+'">'+esc(l.type)+'</span></td><td>'+esc(l.head)+'</td><td>'+esc(l.mode)+'</td><td>'+esc(l.city)+'</td><td class="right '+(l.type==="IN"?"up":"down")+'">'+inr(l.amount)+'</td></tr>';});
+ return h+'</tbody></table>';}
+
+/* ITINERARIES (inbound point-to-point) */
+function renderItins(){var rows=DB.itineraries||[];
+ var html='<div class="empty" style="text-align:left;border-style:solid;margin-bottom:14px">Inbound / point-to-point duties (1–1 or 1–2 cars). Build the leg-by-leg itinerary, then <b>Print</b> it for the chauffeur or <b>Send on WhatsApp</b> — the chauffeur gets the group details + full itinerary instantly. Start &amp; end each group with a duty slip.</div>';
+ html+='<table><thead><tr><th>Itinerary</th><th>Client</th><th>Chauffeur</th><th>Vehicle</th><th>Legs</th><th>Status</th><th></th></tr></thead><tbody>';
+ if(!rows.length)html+='<tr><td colspan="7" class="muted" style="padding:20px;text-align:center">No itineraries yet. Click <b>+ Add</b>.</td></tr>';
+ rows.slice().reverse().forEach(function(v){html+='<tr><td><b>'+esc(v.title)+'</b></td><td>'+esc(v.client||"")+'</td><td>'+esc(v.chauffeur||"")+'</td><td>'+esc(v.vehicle||"")+'</td><td>'+(v.legs?v.legs.length:0)+'</td><td><span class="tag '+stTag(v.status)+'">'+esc(v.status||"")+'</span></td>'
+  +'<td class="right"><button class="linkbtn" onclick="sendItin('+v.id+')">Send chauffeur</button> &nbsp;<button class="linkbtn" onclick="printItin('+v.id+')">Print</button> &nbsp;<button class="linkbtn" onclick="openItin('+v.id+')">Edit</button> &nbsp;<button class="linkbtn" style="color:#c0392b" onclick="delItin('+v.id+')">Delete</button></td></tr>';});
+ html+='</tbody></table>';document.getElementById("view").innerHTML=html;}
+function openItin(id){DB=load();var v=id?(DB.itineraries.find(function(x){return x.id===id;})||{}):{};
+ window._legs=v.legs?JSON.parse(JSON.stringify(v.legs)):[{date:todayISO(),time:"",from:"",to:"",note:""}];
+ var html='<h3>'+(id?"Edit":"New")+' inbound itinerary</h3><div class="fg">'
+ +tf("it_title","Title / group",v.title||"")+tf("it_client","Client",v.client||"")
+ +tf("it_booking","Booking ref",v.booking||"")+tf("it_veh","Vehicle",v.vehicle||"")
+ +tf("it_ch","Chauffeur name",v.chauffeur||"")+tf("it_chm","Chauffeur mobile",v.chauffeurMobile||"")
+ +sf("it_type","Type",BTYPE,v.type||"Inbound (P2P)")+sf("it_status","Status",["Draft","Aligned","Sent to chauffeur","Completed"],v.status||"Draft")
+ +'</div><h3 style="font-size:13px;margin:16px 0 8px">Itinerary legs (point-to-point)</h3><div id="legs"></div>'
+ +'<button class="btn ghost sm" onclick="addLeg()">+ Add leg</button>'
+ +'<div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn gold" onclick="saveItin('+(id||0)+')">Save</button></div>';
+ document.getElementById("sheet").innerHTML=html;document.getElementById("modal").classList.add("open");drawLegs();}
+function tf(id,l,v){return '<div class="f"><label>'+l+'</label><input id="'+id+'" value="'+esc(v)+'"/></div>';}
+function sf(id,l,o,v){return '<div class="f"><label>'+l+'</label><select id="'+id+'">'+o.map(function(x){return '<option'+(x===v?" selected":"")+'>'+x+'</option>';}).join("")+'</select></div>';}
+function drawLegs(){document.getElementById("legs").innerHTML=window._legs.map(function(l,i){
+  return '<div class="itemrow"><input type="date" value="'+esc(l.date)+'" oninput="upLeg('+i+',\'date\',this.value)"/>'
+  +'<input placeholder="Time" value="'+esc(l.time)+'" oninput="upLeg('+i+',\'time\',this.value)"/>'
+  +'<input placeholder="From" value="'+esc(l.from)+'" oninput="upLeg('+i+',\'from\',this.value)"/>'
+  +'<input placeholder="To" value="'+esc(l.to)+'" oninput="upLeg('+i+',\'to\',this.value)"/>'
+  +'<input placeholder="Note" value="'+esc(l.note)+'" oninput="upLeg('+i+',\'note\',this.value)"/>'
+  +'<button class="linkbtn" style="color:#c0392b" onclick="rmLeg('+i+')">✕</button></div>';}).join("");}
+function addLeg(){window._legs.push({date:todayISO(),time:"",from:"",to:"",note:""});drawLegs();}
+function rmLeg(i){window._legs.splice(i,1);drawLegs();}
+function upLeg(i,k,v){window._legs[i][k]=v;}
+function saveItin(id){DB=load();var rec={title:gv("it_title"),client:gv("it_client"),booking:gv("it_booking"),vehicle:gv("it_veh"),chauffeur:gv("it_ch"),chauffeurMobile:gv("it_chm"),type:gv("it_type"),status:gv("it_status"),legs:window._legs.filter(function(l){return l.from||l.to;})};
+ if(!rec.title){toast("Enter a title");return;}
+ if(id){var i=DB.itineraries.findIndex(function(x){return x.id===id;});rec.id=id;DB.itineraries[i]=rec;}
+ else{DB._seq.itineraries=(DB._seq.itineraries||0)+1;rec.id=DB._seq.itineraries;DB.itineraries.push(rec);}
+ save(DB);closeModal();toast("Itinerary saved");go("itineraries");}
+function gv(id){return document.getElementById(id).value;}
+function delItin(id){if(!confirm("Delete itinerary?"))return;DB=load();DB.itineraries=DB.itineraries.filter(function(x){return x.id!==id;});save(DB);go("itineraries");}
+function printItin(id){DB=load();var v=DB.itineraries.find(function(x){return x.id===id;});if(!v)return;
+ var rows=(v.legs||[]).map(function(l,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(l.date)+'</td><td>'+esc(l.time)+'</td><td>'+esc(l.from)+'</td><td>'+esc(l.to)+'</td><td>'+esc(l.note)+'</td></tr>';}).join("");
+ document.getElementById("print").innerHTML='<div class="doc"><div class="hd"><div><h1>AMK Travels India</h1><div>Chauffeur Duty Itinerary</div></div><div class="right"><div><b>'+esc(v.title)+'</b></div><div>'+esc(v.type||"")+'</div></div></div>'
+ +'<div style="margin-bottom:8px"><b>Client:</b> '+esc(v.client||"-")+' &nbsp; <b>Booking:</b> '+esc(v.booking||"-")+'</div>'
+ +'<div style="margin-bottom:10px"><b>Vehicle:</b> '+esc(v.vehicle||"-")+' &nbsp; <b>Chauffeur:</b> '+esc(v.chauffeur||"-")+' '+esc(v.chauffeurMobile||"")+'</div>'
+ +'<table><thead><tr><th>#</th><th>Date</th><th>Time</th><th>From</th><th>To</th><th>Notes</th></tr></thead><tbody>'+rows+'</tbody></table>'
+ +'<p style="margin-top:16px"><b>Mandatory:</b> Start AND end this group with a duty slip. Travel strictly point-to-point as per the itinerary above. Any deviation/extra to be approved by AMK ops in writing.</p>'
+ +'<p style="margin-top:24px">Chauffeur signature: ______________________ &nbsp;&nbsp; Date: __________</p></div>';
+ window.print();}
+function sendItin(id){DB=load();var v=DB.itineraries.find(function(x){return x.id===id;});if(!v)return;
+ var txt="*AMK Travels India — Duty Itinerary*\n\nGroup: "+v.title+"\nClient: "+(v.client||"-")+"\nVehicle: "+(v.vehicle||"-")+"\nChauffeur: "+(v.chauffeur||"-")+"\n\n*Itinerary (point-to-point):*\n";
+ (v.legs||[]).forEach(function(l,i){txt+=(i+1)+". "+(l.date||"")+" "+(l.time||"")+"  "+(l.from||"")+" → "+(l.to||"")+(l.note?" ("+l.note+")":"")+"\n";});
+ txt+="\nStart AND end the group with a duty slip. Travel strictly point-to-point as above.";
+ var d=String(v.chauffeurMobile||"").replace(/\D/g,"");if(d.length===10)d="91"+d;
+ if(!d){toast("Add chauffeur mobile first (Edit)");return;}
+ window.open("https://wa.me/"+d+"?text="+encodeURIComponent(txt),"_blank");
+ var i=DB.itineraries.findIndex(function(x){return x.id===id;});DB.itineraries[i].status="Sent to chauffeur";save(DB);toast("Opening WhatsApp to chauffeur…");go("itineraries");}
+
+/* INVOICES */
+function invTotals(inv){var tax=(inv.items||[]).reduce(function(a,it){return a+Number(it.qty||0)*Number(it.rate||0);},0);var gst=tax*Number(inv.gst||0)/100;return {tax:tax,gst:gst,total:tax+gst};}
+function renderInvoices(){var rows=DB.invoices||[];
+ var html='<table><thead><tr><th>Invoice #</th><th>Date</th><th>Client</th><th class="right">Total</th><th class="right">Balance</th><th></th></tr></thead><tbody>';
+ if(!rows.length)html+='<tr><td colspan="6" class="muted" style="padding:20px;text-align:center">No invoices yet. Click <b>+ Add</b> to raise a GST invoice (incl. recce charges).</td></tr>';
+ rows.slice().reverse().forEach(function(v){var t=invTotals(v);var bal=t.total-Number(v.advance||0);
+  html+='<tr><td><b>'+esc(v.no)+'</b></td><td>'+esc(v.date)+'</td><td>'+esc(v.client)+'</td><td class="right">'+inr(t.total)+'</td><td class="right '+(bal>0?"down":"up")+'">'+inr(bal)+'</td>'
+  +'<td class="right"><button class="linkbtn" onclick="printInv('+v.id+')">Print / PDF</button> &nbsp;<button class="linkbtn" onclick="openInvoice('+v.id+')">Edit</button> &nbsp;<button class="linkbtn" style="color:#c0392b" onclick="delInv('+v.id+')">Delete</button></td></tr>';});
+ html+='</tbody></table>';document.getElementById("view").innerHTML=html;}
+function openInvoice(id){DB=load();var v=id?(DB.invoices.find(function(x){return x.id===id;})||{}):{};
+ window._items=v.items?JSON.parse(JSON.stringify(v.items)):[{desc:"",hsn:"9964",qty:1,rate:0}];window._recceIds=[];
+ var html='<h3>'+(id?"Edit":"New")+' GST invoice</h3><div class="fg">'
+ +tf("inv_no","Invoice no.",v.no||("AMK-"+(2611+DB.invoices.length)))+'<div class="f"><label>Date</label><input id="inv_date" type="date" value="'+esc(v.date||todayISO())+'"/></div>'
+ +tf("inv_client","Client / billed to",v.client||"")+tf("inv_gstin","Client GSTIN",v.gstin||"")
+ +tf("inv_booking","Booking ref",v.bookingRef||"")+sf("inv_gst","GST %",["5","12","18","0"],String(v.gst!=null?v.gst:"5"))
+ +'</div><div style="margin:12px 0 4px"><button class="btn ghost sm" onclick="pullRecce()">+ Pull recce charges for this client</button> <span class="muted" style="font-size:11px">(adds pre-group recce cars to this bill at closing)</span></div>'
+ +'<h3 style="font-size:13px;margin:12px 0 8px">Line items</h3><div id="items"></div>'
+ +'<button class="btn ghost sm" onclick="addItem()">+ Add line</button>'
+ +'<div class="fg" style="margin-top:14px"><div class="f"><label>Advance received</label><input id="inv_adv" type="number" value="'+esc(v.advance||0)+'"/></div></div>'
+ +'<div class="actions"><button class="btn ghost" onclick="closeModal()">Cancel</button><button class="btn gold" onclick="saveInvoice('+(id||0)+')">Save invoice</button></div>';
+ document.getElementById("sheet").innerHTML=html;document.getElementById("modal").classList.add("open");drawItems();}
+function drawItems(){document.getElementById("items").innerHTML=window._items.map(function(it,i){
+  return '<div class="itemrow" style="grid-template-columns:2.2fr 1fr .7fr 1fr auto"><input placeholder="Description" value="'+esc(it.desc)+'" oninput="upItem('+i+',\'desc\',this.value)"/>'
+  +'<input placeholder="HSN" value="'+esc(it.hsn)+'" oninput="upItem('+i+',\'hsn\',this.value)"/>'
+  +'<input type="number" placeholder="Qty" value="'+esc(it.qty)+'" oninput="upItem('+i+',\'qty\',this.value)"/>'
+  +'<input type="number" placeholder="Rate" value="'+esc(it.rate)+'" oninput="upItem('+i+',\'rate\',this.value)"/>'
+  +'<button class="linkbtn" style="color:#c0392b" onclick="rmItem('+i+')">✕</button></div>';}).join("");}
+function addItem(){window._items.push({desc:"",hsn:"9964",qty:1,rate:0});drawItems();}
+function rmItem(i){window._items.splice(i,1);drawItems();}
+function upItem(i,k,v){window._items[i][k]=(k==="qty"||k==="rate")?Number(v||0):v;}
+function pullRecce(){var c=document.getElementById("inv_client").value.trim().toLowerCase();if(!c){toast("Enter client name first");return;}
+ DB=load();var found=DB.recce.filter(function(r){return r.status==="Open"&&String(r.client||"").trim().toLowerCase()===c;});
+ if(!found.length){toast("No open recce for this client");return;}
+ found.forEach(function(r){window._items.push({desc:"Recce — "+r.vehicle+" ("+r.date+")",hsn:"9964",qty:(r.days||1),rate:(r.days?Math.round(r.cost/r.days):r.cost)});window._recceIds.push(r.id);});
+ drawItems();toast("Added "+found.length+" recce charge(s) — will mark Billed on save");}
+function saveInvoice(id){DB=load();var rec={no:gv("inv_no"),date:gv("inv_date"),client:gv("inv_client"),gstin:gv("inv_gstin"),bookingRef:gv("inv_booking"),gst:Number(gv("inv_gst")),advance:Number(gv("inv_adv")||0),items:window._items.filter(function(it){return it.desc||it.rate;})};
+ if(!rec.client){toast("Enter client name");return;}
+ if(window._recceIds&&window._recceIds.length)DB.recce.forEach(function(r){if(window._recceIds.indexOf(r.id)>=0)r.status="Billed";});
+ if(id){var i=DB.invoices.findIndex(function(x){return x.id===id;});rec.id=id;DB.invoices[i]=rec;}
+ else{DB._seq.invoices=(DB._seq.invoices||0)+1;rec.id=DB._seq.invoices;DB.invoices.push(rec);}
+ save(DB);closeModal();toast("Invoice saved");go("invoices");}
+function delInv(id){if(!confirm("Delete invoice?"))return;DB=load();DB.invoices=DB.invoices.filter(function(x){return x.id!==id;});save(DB);go("invoices");}
+function printInv(id){DB=load();var v=DB.invoices.find(function(x){return x.id===id;});if(!v)return;var t=invTotals(v);var bal=t.total-Number(v.advance||0);
+ var rows=(v.items||[]).map(function(it,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(it.desc)+'</td><td>'+esc(it.hsn)+'</td><td class="right">'+esc(it.qty)+'</td><td class="right">'+inr(it.rate)+'</td><td class="right">'+inr(Number(it.qty||0)*Number(it.rate||0))+'</td></tr>';}).join("");
+ var half=v.gst/2;
+ document.getElementById("print").innerHTML='<div class="doc"><div class="hd"><div><h1>AMK Travels India</h1><div>Jaipur · Udaipur · Jodhpur · Ranthambore</div><div>34, Sangram Colony, C-Scheme, Jaipur 302001</div></div><div class="right"><div style="font-weight:800;font-size:16px">TAX INVOICE</div><div>'+esc(v.no)+'</div><div>'+esc(v.date)+'</div></div></div>'
+ +'<div style="margin-bottom:8px"><b>Billed to:</b> '+esc(v.client)+(v.gstin?" · GSTIN "+esc(v.gstin):"")+(v.bookingRef?" · Booking "+esc(v.bookingRef):"")+'</div>'
+ +'<table><thead><tr><th>#</th><th>Description</th><th>HSN/SAC</th><th class="right">Qty</th><th class="right">Rate</th><th class="right">Amount</th></tr></thead><tbody>'+rows+'</tbody></table>'
+ +'<div class="tot"><div><span>Taxable value</span><b>'+inr(t.tax)+'</b></div><div><span>CGST @ '+half+'%</span><span>'+inr(t.gst/2)+'</span></div><div><span>SGST @ '+half+'%</span><span>'+inr(t.gst/2)+'</span></div>'
+ +'<div style="border-top:2px solid #6d1a2d;font-size:15px"><b>Grand total</b><b>'+inr(t.total)+'</b></div><div><span>Advance received</span><span>'+inr(v.advance)+'</span></div><div><b>Balance due</b><b>'+inr(bal)+'</b></div></div>'
+ +'<p style="margin-top:30px;font-size:11px">Computer-generated invoice. Subject to Jaipur jurisdiction.</p></div>';
+ window.print();}
+
+/* SETTINGS */
+function renderSettings(){var u=DB.users.find(function(x){return x.role===ROLE;})||{};
+ var counts=Object.keys(ENT).filter(function(k){return k!=="itineraries";}).map(function(k){return ENT[k].label+": "+(DB[k]||[]).length;}).concat("Itineraries: "+DB.itineraries.length,"Invoices: "+DB.invoices.length).join(" · ");
+ document.getElementById("view").innerHTML='<div class="card"><h3 style="margin:0 0 6px">Backup &amp; restore</h3>'
+ +'<p class="muted" style="font-size:12.5px">Data is saved on this device/browser. Export regularly; import to move it to another device.</p>'
+ +'<div class="rowflex" style="margin-top:10px"><button class="btn" onclick="exportDB()">Export backup (.json)</button>'
+ +'<label class="btn ghost" style="cursor:pointer">Import backup<input type="file" accept="application/json" style="display:none" onchange="importDB(this)"></label></div>'
+ +'<p class="muted" style="font-size:12px;margin-top:12px">'+counts+'</p></div>'
+ +'<div class="card" style="margin-top:16px"><h3 style="margin:0 0 6px">Logged in as</h3><p class="muted" style="font-size:12.5px">Role: <b>'+ROLE+'</b></p>'
+ +(ROLE==="Admin"?'<button class="btn sm" onclick="go(\'users\')">Manage team &amp; logins</button> ':'')
+ +'<button class="btn danger sm" onclick="resetDB()">Reset all data</button></div>'
+ +'<div class="card" style="margin-top:16px"><h3 style="margin:0 0 6px">Multi-device note</h3><p class="muted" style="font-size:12.5px">Logins &amp; roles work, but data is stored per-device. For all offices to share the same live data online, this needs the cloud-database (Firebase) version — ask to build that next.</p></div>';}
+function exportDB(){var blob=new Blob([JSON.stringify(load(),null,2)],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="amk-erp-backup-"+todayISO()+".json";a.click();toast("Backup downloaded");}
+function importDB(inp){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{save(JSON.parse(r.result));DB=load();toast("Backup imported");go("dash");}catch(e){toast("Invalid file");}};r.readAsText(f);}
+function resetDB(){if(!confirm("Erase ALL data and reload sample data?"))return;localStorage.removeItem(KEY);DB=load();toast("Data reset");go("dash");}
+
+startApp();
 </script>
 </body>
 </html>
